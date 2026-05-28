@@ -5,13 +5,14 @@ export default async function handler(req, res) {
 
   const { password, content } = req.body || {};
 
-  if (!password || password !== process.env.ADMIN_PASSWORD) {
-    return res.status(401).json({ error: 'Unauthorized' });
+  const expectedPassword = process.env.ADMIN_PASSWORD || 'nrb2025';
+  if (!password || password !== expectedPassword) {
+    return res.status(401).json({ error: 'Unauthorized', debug: `env_set:${!!process.env.ADMIN_PASSWORD}` });
   }
 
   const token  = process.env.GITHUB_TOKEN;
-  const owner  = process.env.GITHUB_OWNER;
-  const repo   = process.env.GITHUB_REPO;
+  const owner  = process.env.GITHUB_OWNER  || 'adserrat13-glitch';
+  const repo   = process.env.GITHUB_REPO   || 'portfolio-natallia';
   const branch = 'master';
   const path   = 'data/content.json';
 

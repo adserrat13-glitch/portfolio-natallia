@@ -210,6 +210,7 @@
     <button class="tab-btn" onclick="switchTab('contato', this)">Contato</button>
     <button class="tab-btn" onclick="switchTab('hero', this)">Hero</button>
     <button class="tab-btn" onclick="switchTab('footer', this)">Footer</button>
+    <button class="tab-btn" onclick="switchTab('reels', this)">Reels</button>
     <button class="tab-btn" onclick="switchTab('cores', this)">🎨 Cores</button>
   </div>
 
@@ -312,6 +313,15 @@
       </div>
     </div>
 
+    <!-- REELS -->
+    <div id="tab-reels" class="tab-panel">
+      <div class="form-section">
+        <h3>Reels / Vídeos</h3>
+        <div id="reels-list"></div>
+        <button class="btn-add" onclick="addReel()">+ Adicionar Reel</button>
+      </div>
+    </div>
+
     <!-- CORES -->
     <div id="tab-cores" class="tab-panel">
       <div class="form-section">
@@ -403,6 +413,7 @@ function populateForm() {
 
   renderProjetos(content.projetos || []);
   renderServicos(content.servicos || []);
+  renderReels(content.reels || []);
 
   const ct = content.contato || {};
   setVal('contato-subtitulo', ct.subtitulo || '');
@@ -918,6 +929,83 @@ function isLight(hex) {
   return (r * 299 + g * 587 + b * 114) / 1000 > 128;
 }
 
+/* ── Reels ── */
+function renderReels(reels) {
+  const list = document.getElementById('reels-list');
+  while (list.firstChild) list.removeChild(list.firstChild);
+  reels.forEach((r, i) => {
+    const card = document.createElement('div');
+    card.className = 'projeto-card';
+    card.dataset.reelIndex = i;
+
+    const header = document.createElement('div');
+    header.className = 'projeto-card-header';
+    const h4 = document.createElement('h4');
+    h4.textContent = r.titulo || ('Reel ' + (i + 1));
+    const removeBtn = document.createElement('button');
+    removeBtn.className = 'btn-remove';
+    removeBtn.textContent = 'Remover';
+    removeBtn.addEventListener('click', () => card.remove());
+    header.appendChild(h4); header.appendChild(removeBtn);
+
+    const body = document.createElement('div');
+    body.className = 'projeto-card-body';
+
+    // Título
+    const tituloGroup = document.createElement('div');
+    tituloGroup.className = 'form-group';
+    const tituloLabel = document.createElement('label');
+    tituloLabel.textContent = 'Título';
+    const tituloInput = document.createElement('input');
+    tituloInput.type = 'text';
+    tituloInput.dataset.field = 'reel-titulo';
+    tituloInput.value = r.titulo || '';
+    tituloInput.addEventListener('input', () => { h4.textContent = tituloInput.value || ('Reel ' + (i + 1)); });
+    tituloGroup.appendChild(tituloLabel); tituloGroup.appendChild(tituloInput);
+
+    // Tag
+    const tagGroup = document.createElement('div');
+    tagGroup.className = 'form-group';
+    const tagLabel = document.createElement('label');
+    tagLabel.textContent = 'Categoria (ex: Social Media)';
+    const tagInput = document.createElement('input');
+    tagInput.type = 'text';
+    tagInput.dataset.field = 'reel-tag';
+    tagInput.value = r.tag || 'Social Media';
+    tagGroup.appendChild(tagLabel); tagGroup.appendChild(tagInput);
+
+    // Upload de vídeo
+    body.appendChild(tituloGroup);
+    body.appendChild(tagGroup);
+    body.appendChild(makeUploadBox('Vídeo MP4', 'reel-video-' + i, r.videoUrl || ''));
+
+    card.appendChild(header); card.appendChild(body);
+    list.appendChild(card);
+  });
+}
+
+function addReel() {
+  const list = document.getElementById('reels-list');
+  const idx = list.children.length;
+  renderReels([...getReelsData(), { id: idx, titulo: 'Reel ' + (idx + 1), tag: 'Social Media', videoUrl: '' }]);
+}
+
+function getReelsData() {
+  const list = document.getElementById('reels-list');
+  if (!list) return [];
+  return Array.from(list.querySelectorAll('.projeto-card')).map((card, i) => {
+    const tituloInput = card.querySelector('[data-field="reel-titulo"]');
+    const tagInput = card.querySelector('[data-field="reel-tag"]');
+    const videoInput = card.querySelector('[data-field^="reel-video-"]');
+    return {
+      id: i,
+      titulo: tituloInput ? tituloInput.value : ('Reel ' + (i + 1)),
+      tag: tagInput ? tagInput.value : 'Social Media',
+      videoUrl: videoInput ? videoInput.value : '',
+    };
+  });
+}
+
 /* ── Export ── */
 function buildContent() {
   return {
@@ -948,6 +1036,7 @@ function buildContent() {
       pinterest: document.getElementById('contato-pinterest').value,
     },
     footer: { texto: document.getElementById('footer-texto').value },
+    reels: getReelsData(),
   };
 }
 

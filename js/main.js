@@ -105,6 +105,30 @@ async function loadContent() {
       const fp = document.querySelector('.footer p');
       if (fp) fp.textContent = c.footer.texto;
     }
+
+    // Reels
+    if (Array.isArray(c.reels)) {
+      c.reels.forEach(r => {
+        const item = document.querySelector(`.reel-item[data-index="${r.id}"]`);
+        if (!item) return;
+        const titleEl = item.querySelector('.reel-title');
+        const tagEl = item.querySelector('.reel-tag');
+        if (titleEl && r.titulo) titleEl.textContent = r.titulo;
+        if (tagEl && r.tag) tagEl.textContent = r.tag;
+        if (r.videoUrl) {
+          const media = item.querySelector('.reel-media');
+          if (!media) return;
+          const vid = document.createElement('video');
+          vid.src = r.videoUrl;
+          vid.loop = true;
+          vid.muted = true;
+          vid.playsInline = true;
+          vid.preload = 'metadata';
+          while (media.firstChild) media.removeChild(media.firstChild);
+          media.appendChild(vid);
+        }
+      });
+    }
   } catch (e) {
     // Silently fail — static HTML is the fallback
   }
@@ -360,9 +384,20 @@ function initReels() {
       const pos = i - current;
       const clamped = Math.max(-4, Math.min(4, pos));
       item.dataset.pos = clamped;
-      // pause any playing video when not active
       const vid = item.querySelector('video');
-      if (vid) { if (pos === 0) vid.play().catch(() => {}); else vid.pause(); }
+      if (vid) {
+        if (pos === 0) {
+          vid.muted = false;
+          vid.controls = true;
+          vid.currentTime = 0;
+          vid.play().catch(() => {});
+        } else {
+          vid.muted = true;
+          vid.controls = false;
+          vid.currentTime = 0;
+          vid.play().catch(() => {}); // preview silencioso nos laterais
+        }
+      }
     });
     dotsContainer.querySelectorAll('.reels-dot').forEach((d, i) => d.classList.toggle('active', i === current));
   }

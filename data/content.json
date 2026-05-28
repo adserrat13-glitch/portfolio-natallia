@@ -56,6 +56,13 @@
     "pinterest": ""
   },
   "footer": {
-    "texto": "� 2025 Natallia Rocha Barros � Designer"
-  }
+    "texto": "© 2025 Natallia Rocha Barros · Designer"
+  },
+  "reels": [
+    { "id": 0, "titulo": "Reel 1", "tag": "Social Media", "videoUrl": "" },
+    { "id": 1, "titulo": "Reel 2", "tag": "Social Media", "videoUrl": "" },
+    { "id": 2, "titulo": "Reel 3", "tag": "Social Media", "videoUrl": "" },
+    { "id": 3, "titulo": "Reel 4", "tag": "Social Media", "videoUrl": "" },
+    { "id": 4, "titulo": "Reel 5", "tag": "Social Media", "videoUrl": "" }
+  ]
 }

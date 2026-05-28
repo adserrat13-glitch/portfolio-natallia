@@ -952,13 +952,24 @@ function exportJSON() {
 }
 
 /* ── Save to Vercel ── */
-async function saveToVercel() {
-  const data = buildContent();
+function stripBase64(obj) {
+  if (typeof obj === 'string') return obj.startsWith('data:') ? '' : obj;
+  if (Array.isArray(obj)) return obj.map(stripBase64);
+  if (obj && typeof obj === 'object') {
+    const out = {};
+    for (const k of Object.keys(obj)) out[k] = stripBase64(obj[k]);
+    return out;
+  }
+  return obj;
+}
 
-  // Size guard — Vercel Hobby limit is 4.5 MB
+async function saveToVercel() {
+  const data = stripBase64(buildContent());
+
+  // Size guard — Vercel Hobby limit is 4.5 MB; GitHub Contents API ~1 MB
   const sizeKB = new Blob([JSON.stringify(data)]).size / 1024;
-  if (sizeKB > 3000) {
-    toast('Conteúdo muito grande (' + Math.round(sizeKB) + ' KB). Para imagens novas, use "Exportar JSON" e faça o upload manual.');
+  if (sizeKB > 900) {
+    toast('Conteúdo ainda muito grande (' + Math.round(sizeKB) + ' KB). Use "Exportar JSON" e faça o upload manual.');
     return;
   }
 

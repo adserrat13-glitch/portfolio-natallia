@@ -333,7 +333,18 @@
 
 <script>
 const PASS = 'nrb2025';
+const CLOUDINARY_CLOUD = 'dgfvyve5f';
+const CLOUDINARY_PRESET = 'portfolio_unsigned';
 let content = {};
+
+async function uploadToCloudinary(file) {
+  const fd = new FormData();
+  fd.append('file', file);
+  fd.append('upload_preset', CLOUDINARY_PRESET);
+  const r = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD}/auto/upload`, { method: 'POST', body: fd });
+  if (!r.ok) throw new Error('Upload Cloudinary falhou');
+  return (await r.json()).secure_url;
+}
 
 function doLogin() {
   const val = document.getElementById('login-pwd').value;
@@ -559,17 +570,22 @@ function makeDropZone(galList) {
 
   async function handleFiles(files) {
     for (const file of files) {
-      const dataUrl = await readFileAsDataURL(file);
-      const item = makeGalleryItem(null, dataUrl);
-      // update name label
-      item.querySelector('.gal-name').textContent = file.name;
+      const item = makeGalleryItem(null, '');
+      item.querySelector('.gal-name').textContent = 'Enviando ' + file.name + '…';
       item.querySelector('.gal-type').textContent = file.type.startsWith('video') ? 'Vídeo' : 'Imagem';
-      // update thumb
-      if (file.type.startsWith('image')) {
-        const img = item.querySelector('.gal-thumb');
-        if (img) img.src = dataUrl;
-      }
       galList.appendChild(item);
+      try {
+        const url = await uploadToCloudinary(file);
+        item.querySelector('input[type="hidden"]').value = url;
+        item.querySelector('.gal-name').textContent = file.name;
+        if (file.type.startsWith('image')) {
+          const img = item.querySelector('.gal-thumb');
+          if (img) img.src = url;
+        }
+      } catch(e) {
+        item.querySelector('.gal-name').textContent = 'Erro: ' + file.name;
+        console.error(e);
+      }
     }
   }
 
@@ -620,37 +636,32 @@ function makeUploadBox(labelText, fieldName, currentSrc) {
   const hidden = document.createElement('input');
   hidden.type = 'hidden'; hidden.dataset.field = fieldName; hidden.value = currentSrc || '';
 
-  fileInput.addEventListener('change', async () => {
-    const file = fileInput.files[0];
-    if (!file) return;
-    const dataUrl = await readFileAsDataURL(file);
-    hidden.value = dataUrl;
-    nameLbl.textContent = file.name;
-    if (file.type.startsWith('video')) {
-      preview.classList.remove('show');
-      vidPreview.src = dataUrl; vidPreview.classList.add('show'); vidPreview.play().catch(()=>{});
-    } else {
-      vidPreview.classList.remove('show');
-      preview.src = dataUrl; preview.classList.add('show');
+  async function handleUploadFile(file) {
+    nameLbl.textContent = 'Enviando…';
+    try {
+      const url = await uploadToCloudinary(file);
+      hidden.value = url;
+      nameLbl.textContent = file.name;
+      if (file.type.startsWith('video')) {
+        preview.classList.remove('show');
+        vidPreview.src = url; vidPreview.classList.add('show'); vidPreview.play().catch(()=>{});
+      } else {
+        vidPreview.classList.remove('show');
+        preview.src = url; preview.classList.add('show');
+      }
+    } catch(e) {
+      nameLbl.textContent = 'Erro no upload. Tente novamente.';
+      console.error(e);
     }
-  });
+  }
+
+  fileInput.addEventListener('change', () => { if (fileInput.files[0]) handleUploadFile(fileInput.files[0]); });
 
   box.addEventListener('dragover', e => { e.preventDefault(); box.classList.add('drag-over'); });
   box.addEventListener('dragleave', () => box.classList.remove('drag-over'));
-  box.addEventListener('drop', async e => {
+  box.addEventListener('drop', e => {
     e.preventDefault(); box.classList.remove('drag-over');
-    const file = e.dataTransfer.files[0];
-    if (!file) return;
-    const dataUrl = await readFileAsDataURL(file);
-    hidden.value = dataUrl;
-    nameLbl.textContent = file.name;
-    if (file.type.startsWith('video')) {
-      preview.classList.remove('show');
-      vidPreview.src = dataUrl; vidPreview.classList.add('show'); vidPreview.play().catch(()=>{});
-    } else {
-      vidPreview.classList.remove('show');
-      preview.src = dataUrl; preview.classList.add('show');
-    }
+    if (e.dataTransfer.files[0]) handleUploadFile(e.dataTransfer.files[0]);
   });
 
   box.appendChild(fileInput); box.appendChild(boxLabel);
@@ -952,24 +963,13 @@ function exportJSON() {
 }
 
 /* ── Save to Vercel ── */
-function stripBase64(obj) {
-  if (typeof obj === 'string') return obj.startsWith('data:') ? '' : obj;
-  if (Array.isArray(obj)) return obj.map(stripBase64);
-  if (obj && typeof obj === 'object') {
-    const out = {};
-    for (const k of Object.keys(obj)) out[k] = stripBase64(obj[k]);
-    return out;
-  }
-  return obj;
-}
-
 async function saveToVercel() {
-  const data = stripBase64(buildContent());
+  const data = buildContent();
 
-  // Size guard — Vercel Hobby limit is 4.5 MB; GitHub Contents API ~1 MB
+  // Size guard — imagens agora são URLs Cloudinary, payload deve ser pequeno
   const sizeKB = new Blob([JSON.stringify(data)]).size / 1024;
   if (sizeKB > 900) {
-    toast('Conteúdo ainda muito grande (' + Math.round(sizeKB) + ' KB). Use "Exportar JSON" e faça o upload manual.');
+    toast('Conteúdo muito grande (' + Math.round(sizeKB) + ' KB). Verifique se há imagens antigas em base64 e use "Exportar JSON".');
     return;
   }
 

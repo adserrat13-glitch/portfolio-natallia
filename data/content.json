@@ -2,16 +2,16 @@
   "cores": {
     "--bg": "#eae7e2",
     "--surface": "#f2efe9",
-    "--dark": "#1a1a2e",
-    "--primary": "#2d1b69",
-    "--accent": "#e8d44d",
-    "--text": "#1a1a2e",
+    "--dark": "#aeaeea",
+    "--primary": "#aeaeea",
+    "--accent": "#e1dcb7",
+    "--text": "#4c4c5d",
     "--white": "#ffffff",
     "--gray": "#7a7670",
     "--card-purple": "#1a1a2e",
-    "--card-yellow": "#e8d44d",
-    "--card-green": "#1a6b4a",
-    "--footer-bg": "#111120"
+    "--card-yellow": "#eae5c3",
+    "--card-green": "#aeaeea",
+    "--footer-bg": "#3d3d61"
   },
   "hero": {
     "bgImage": "",

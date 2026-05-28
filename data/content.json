@@ -33,15 +33,12 @@
       "titulo": "dentista ",
       "cliente": "natalia costa ",
       "area": "dentista ",
-      "categoria": "social",
+      "categoria": "reels",
       "descricao": "projeto para a dentista natalia costa ",
       "imgCapa": "https://res.cloudinary.com/dgfvyve5f/image/upload/v1780002164/lczaxi7sledcjnfvkv5e.png",
       "imgGif": "",
       "behance": "",
       "galeria": [
-        "https://res.cloudinary.com/dgfvyve5f/image/upload/v1780002073/ixxirnzjo5jl7bsw5joa.jpg",
-        "https://res.cloudinary.com/dgfvyve5f/image/upload/v1780002156/xmucmz3ctts6t7iaigqr.png",
-        "https://res.cloudinary.com/dgfvyve5f/image/upload/v1780002157/vgbiogijuwsmxbighqvk.png",
         "https://res.cloudinary.com/dgfvyve5f/video/upload/v1780002169/glinrnb92nctsii8cotq.mp4"
       ]
     }

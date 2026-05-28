@@ -443,6 +443,26 @@ function getSkills() {
 }
 
 /* ── Projetos ── */
+function makeSelectField(labelText, field, value, options) {
+  const group = document.createElement('div');
+  group.className = 'form-group';
+  const lbl = document.createElement('label');
+  lbl.textContent = labelText;
+  const sel = document.createElement('select');
+  sel.dataset.field = field;
+  sel.style.cssText = 'padding:10px 14px;border:2px solid #e0ddd8;border-radius:8px;font-size:.9rem;font-family:inherit;background:#fff;cursor:pointer;';
+  sel.addEventListener('focus', () => sel.style.borderColor = 'var(--primary)');
+  sel.addEventListener('blur',  () => sel.style.borderColor = '#e0ddd8');
+  options.forEach(([val, label]) => {
+    const opt = document.createElement('option');
+    opt.value = val; opt.textContent = label;
+    if (val === value) opt.selected = true;
+    sel.appendChild(opt);
+  });
+  group.appendChild(lbl); group.appendChild(sel);
+  return group;
+}
+
 function makeField(labelText, field, value, type) {
   const group = document.createElement('div');
   group.className = 'form-group';
@@ -666,7 +686,14 @@ function renderProjetos(projetos) {
     const body = document.createElement('div');
     body.className = 'projeto-card-body';
     body.appendChild(makeRow(makeField('Chave (key)', 'key', p.key), makeField('Título', 'titulo', p.titulo)));
-    body.appendChild(makeRow(makeField('Cliente', 'cliente', p.cliente), makeField('Área', 'area', p.area)));
+    body.appendChild(makeRow(makeField('Cliente', 'cliente', p.cliente), makeField('Área / Segmento', 'area', p.area)));
+    const categoriaSelect = makeSelectField('Onde aparece no site', 'categoria', p.categoria || 'identidade', [
+      ['identidade', 'Identidade Visual (aba Projetos)'],
+      ['social',     'Social Media (aba Projetos)'],
+      ['pecas',      'Peças Gráficas (aba Projetos)'],
+      ['reels',      'Reels / Vídeos (seção Vídeos)'],
+    ]);
+    body.appendChild(categoriaSelect);
     body.appendChild(makeField('Descrição', 'descricao', p.descricao, 'textarea'));
 
     // Capa + GIF upload boxes
@@ -703,7 +730,7 @@ function toggleProjeto(header) {
 
 function addProjeto() {
   const projetos = getProjetosData();
-  projetos.push({ key: 'novo-projeto', titulo: 'Novo Projeto', cliente: '', area: 'Identidade Visual', descricao: '', imgCapa: '', imgGif: '', behance: '', galeria: [] });
+  projetos.push({ key: 'novo-projeto', titulo: 'Novo Projeto', cliente: '', area: '', categoria: 'identidade', descricao: '', imgCapa: '', imgGif: '', behance: '', galeria: [] });
   renderProjetos(projetos);
   toast('Novo projeto adicionado — preencha os dados e exporte o JSON');
 }
@@ -722,7 +749,7 @@ function getProjetosData() {
     const get = field => { const el = card.querySelector(`[data-field="${field}"]`); return el ? el.value : ''; };
     const galList = card.querySelector('.gallery-list');
     const galeria = galList ? Array.from(galList.querySelectorAll('input[type="hidden"]')).map(i => i.value).filter(Boolean) : [];
-    return { key: get('key'), titulo: get('titulo'), cliente: get('cliente'), area: get('area'), descricao: get('descricao'), imgCapa: get('imgCapa'), imgGif: get('imgGif'), behance: get('behance'), galeria };
+    return { key: get('key'), titulo: get('titulo'), cliente: get('cliente'), area: get('area'), categoria: get('categoria'), descricao: get('descricao'), imgCapa: get('imgCapa'), imgGif: get('imgGif'), behance: get('behance'), galeria };
   });
 }
 

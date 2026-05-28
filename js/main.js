@@ -64,6 +64,13 @@ async function loadContent() {
     if (Array.isArray(c.projetos)) {
       c.projetos.forEach(p => {
         projects[p.key] = { title: p.titulo, behance: p.behance, images: p.galeria };
+
+        // Apply categoria to project card for filter system
+        if (p.categoria) {
+          const card = document.querySelector(`.projeto-card[data-project="${p.key}"]`);
+          if (card) card.dataset.categoria = p.categoria;
+        }
+
         const faixa = document.querySelector(`.projeto-faixa[data-project="${p.key}"]`);
         if (!faixa) return;
         const titleEl = faixa.querySelector('.projeto-faixa-title');

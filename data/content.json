@@ -33,14 +33,12 @@
       "titulo": "Novo Projeto",
       "cliente": "",
       "area": "",
-      "categoria": "identidade",
+      "categoria": "reels",
       "descricao": "",
       "imgCapa": "",
       "imgGif": "",
       "behance": "",
-      "galeria": [
-        ""
-      ]
+      "galeria": []
     }
   ],
   "servicos": [],

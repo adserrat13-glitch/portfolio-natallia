@@ -7,7 +7,7 @@ export default async function handler(req, res) {
 
   const expectedPassword = process.env.ADMIN_PASSWORD || 'nrb2025';
   if (!password || password !== expectedPassword) {
-    return res.status(401).json({ error: 'Unauthorized', debug: `env_set:${!!process.env.ADMIN_PASSWORD}` });
+    return res.status(401).json({ error: 'Unauthorized' });
   }
 
   const token  = process.env.GITHUB_TOKEN;
@@ -32,7 +32,7 @@ export default async function handler(req, res) {
   const getRes = await fetch(`${apiUrl}?ref=${branch}`, { headers });
   if (!getRes.ok) {
     const detail = await getRes.text();
-    return res.status(502).json({ error: 'GitHub GET failed', detail, debug: { owner, repo, token_len: token ? token.length : 0, token_start: token ? token.slice(0,12) : '' } });
+    return res.status(502).json({ error: 'GitHub GET failed', detail });
   }
   const { sha } = await getRes.json();
 

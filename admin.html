@@ -197,7 +197,8 @@
     <h1>NRB · Admin</h1>
     <div class="admin-header-actions">
       <a href="index.html" target="_blank" class="btn-preview">Ver site ↗</a>
-      <button class="btn-save" onclick="exportJSON()">⬇ Exportar content.json</button>
+      <button class="btn-save" onclick="saveToVercel()">💾 Salvar no site</button>
+      <button class="btn-preview" onclick="exportJSON()" style="font-size:.8rem;padding:8px 14px">⬇ Exportar JSON</button>
       <button class="btn-logout" onclick="logout()">Sair</button>
     </div>
   </div>
@@ -921,6 +922,46 @@ function exportJSON() {
   a.click();
   URL.revokeObjectURL(a.href);
   toast('content.json baixado! Substitua o arquivo em data/content.json e faça push para o GitHub.');
+}
+
+/* ── Save to Vercel ── */
+async function saveToVercel() {
+  const data = buildContent();
+
+  // Size guard — Vercel Hobby limit is 4.5 MB
+  const sizeKB = new Blob([JSON.stringify(data)]).size / 1024;
+  if (sizeKB > 3000) {
+    toast('Conteúdo muito grande (' + Math.round(sizeKB) + ' KB). Para imagens novas, use "Exportar JSON" e faça o upload manual.');
+    return;
+  }
+
+  const btn = document.querySelector('.btn-save');
+  const original = btn.textContent;
+  btn.textContent = 'Salvando…';
+  btn.disabled = true;
+
+  try {
+    const res = await fetch('/api/save', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password: PASS, content: data }),
+    });
+
+    const json = await res.json();
+
+    if (res.ok) {
+      toast('✓ Salvo! O site será atualizado em ~30 segundos.');
+    } else {
+      toast('Erro: ' + (json.error || 'Algo deu errado. Tente o botão Exportar JSON.'));
+      console.error(json);
+    }
+  } catch (e) {
+    toast('Erro de rede. Verifique sua conexão ou use Exportar JSON.');
+    console.error(e);
+  } finally {
+    btn.textContent = original;
+    btn.disabled = false;
+  }
 }
 
 /* ── Utils ── */

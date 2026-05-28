@@ -60,33 +60,91 @@ async function loadContent() {
       }
     }
 
-    // Projetos — atualiza dados do modal e faixas
-    if (Array.isArray(c.projetos)) {
-      c.projetos.forEach(p => {
-        projects[p.key] = { title: p.titulo, behance: p.behance, images: p.galeria };
+    // Projetos — gera cards dinamicamente a partir do content.json
+    if (Array.isArray(c.projetos) && c.projetos.length > 0) {
+      const grid = document.getElementById('projetos-grid');
+      if (grid) {
+        // limpar cards existentes e reconstruir do JSON
+        while (grid.firstChild) grid.removeChild(grid.firstChild);
 
-        // Apply categoria to project card and destaques for filter system
-        if (p.categoria) {
-          const card = document.querySelector(`.projeto-card[data-project="${p.key}"]`);
-          if (card) card.dataset.categoria = p.categoria;
-          document.querySelectorAll(`.destaque-featured[data-project="${p.key}"], .destaque-item[data-project="${p.key}"]`)
-            .forEach(el => { el.dataset.categoria = p.categoria; });
+        c.projetos.forEach(p => {
+          // Atualiza objeto modal
+          projects[p.key] = { title: p.titulo, behance: p.behance, images: p.galeria || [] };
+
+          // Mapear categoria → label legível
+          const categoriaLabel = {
+            identidade: 'Identidade Visual',
+            social: 'Social Media',
+            pecas: 'Peças Gráficas',
+            reels: 'Reels',
+          }[p.categoria] || p.categoria || 'Identidade Visual';
+
+          // Criar card
+          const article = document.createElement('article');
+          article.className = 'projeto-card reveal';
+          article.dataset.project = p.key;
+          article.dataset.categoria = p.categoria || 'identidade';
+
+          const imgWrap = document.createElement('div');
+          imgWrap.className = 'projeto-card-img';
+
+          const capaImg = document.createElement('img');
+          capaImg.src = p.imgCapa || '';
+          capaImg.alt = p.titulo;
+          capaImg.loading = 'lazy';
+
+          const hoverDiv = document.createElement('div');
+          hoverDiv.className = 'projeto-card-hover';
+          const gifImg = document.createElement('img');
+          gifImg.src = p.imgGif || p.imgCapa || '';
+          gifImg.alt = p.titulo + ' animado';
+          gifImg.loading = 'lazy';
+          const ctaSpan = document.createElement('span');
+          ctaSpan.className = 'projeto-card-cta';
+          ctaSpan.textContent = 'Ver Projeto ↗';
+          hoverDiv.appendChild(gifImg);
+          hoverDiv.appendChild(ctaSpan);
+
+          imgWrap.appendChild(capaImg);
+          imgWrap.appendChild(hoverDiv);
+
+          const info = document.createElement('div');
+          info.className = 'projeto-card-info';
+          const tag = document.createElement('span');
+          tag.className = 'projeto-card-tag';
+          tag.textContent = categoriaLabel;
+          const title = document.createElement('h3');
+          title.className = 'projeto-card-title';
+          title.textContent = p.titulo;
+          const cliente = document.createElement('p');
+          cliente.className = 'projeto-card-cliente';
+          cliente.textContent = p.area || p.cliente || '';
+          info.appendChild(tag); info.appendChild(title); info.appendChild(cliente);
+
+          article.appendChild(imgWrap);
+          article.appendChild(info);
+
+          // Evento de clique para abrir modal
+          article.addEventListener('click', () => openModal(p.key));
+          article.addEventListener('keydown', e => {
+            if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openModal(p.key); }
+          });
+          article.setAttribute('role', 'button');
+          article.setAttribute('tabindex', '0');
+
+          grid.appendChild(article);
+        });
+
+        // Re-aplicar filtro ativo após reconstruir os cards
+        const activeBtn = document.querySelector('.filtro-btn.active');
+        if (activeBtn) {
+          const filtro = activeBtn.dataset.filtro;
+          grid.querySelectorAll('.projeto-card').forEach(card => {
+            const match = filtro === 'todos' || card.dataset.categoria === filtro;
+            card.style.display = match ? '' : 'none';
+          });
         }
-
-        const faixa = document.querySelector(`.projeto-faixa[data-project="${p.key}"]`);
-        if (!faixa) return;
-        const titleEl = faixa.querySelector('.projeto-faixa-title');
-        if (titleEl) titleEl.textContent = `→ ${p.titulo}`;
-        const metaItems = faixa.querySelectorAll('.projeto-faixa-info > div');
-        if (metaItems[0]) metaItems[0].lastChild.textContent = p.cliente;
-        if (metaItems[1]) metaItems[1].lastChild.textContent = p.area;
-        const descEl = faixa.querySelector('.meta-desc');
-        if (descEl) descEl.textContent = p.descricao;
-        const capaImg = faixa.querySelector('.projeto-faixa-img > img');
-        if (capaImg) { capaImg.src = p.imgCapa; capaImg.alt = p.titulo; }
-        const gifImg = faixa.querySelector('.projeto-faixa-hover img');
-        if (gifImg) { gifImg.src = p.imgGif; gifImg.alt = p.titulo; }
-      });
+      }
     }
 
     // Contato

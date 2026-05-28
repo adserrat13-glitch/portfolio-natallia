@@ -311,5 +311,67 @@ modal.addEventListener('touchend', e => {
   if (Math.abs(diff) > 50) showSlide(currentIndex + (diff > 0 ? 1 : -1));
 }, { passive: true });
 
+// ── Reels Coverflow ───────────────────────────
+function initReels() {
+  const stage = document.getElementById('reels-stage');
+  if (!stage) return;
+
+  const items = Array.from(stage.querySelectorAll('.reel-item'));
+  const dotsContainer = document.getElementById('reels-dots');
+  const total = items.length;
+  let current = Math.floor(total / 2);
+
+  function buildDotsList() {
+    while (dotsContainer.firstChild) dotsContainer.removeChild(dotsContainer.firstChild);
+    items.forEach((_, i) => {
+      const btn = document.createElement('button');
+      btn.className = 'reels-dot' + (i === current ? ' active' : '');
+      btn.setAttribute('aria-label', `Reel ${i + 1}`);
+      btn.addEventListener('click', () => goTo(i));
+      dotsContainer.appendChild(btn);
+    });
+  }
+
+  function goTo(index) {
+    current = (index + total) % total;
+    items.forEach((item, i) => {
+      const pos = i - current;
+      const clamped = Math.max(-4, Math.min(4, pos));
+      item.dataset.pos = clamped;
+      // pause any playing video when not active
+      const vid = item.querySelector('video');
+      if (vid) { if (pos === 0) vid.play().catch(() => {}); else vid.pause(); }
+    });
+    dotsContainer.querySelectorAll('.reels-dot').forEach((d, i) => d.classList.toggle('active', i === current));
+  }
+
+  // Click on side items → move to center
+  items.forEach((item, i) => {
+    item.addEventListener('click', () => { if (i !== current) goTo(i); });
+  });
+
+  document.getElementById('reels-prev').addEventListener('click', () => goTo(current - 1));
+  document.getElementById('reels-next').addEventListener('click', () => goTo(current + 1));
+
+  // Keyboard
+  document.addEventListener('keydown', e => {
+    if (document.activeElement && document.activeElement.closest('.reels-section')) {
+      if (e.key === 'ArrowLeft') goTo(current - 1);
+      if (e.key === 'ArrowRight') goTo(current + 1);
+    }
+  });
+
+  // Swipe mobile
+  let touchX = 0;
+  stage.addEventListener('touchstart', e => { touchX = e.touches[0].clientX; }, { passive: true });
+  stage.addEventListener('touchend', e => {
+    const diff = touchX - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 40) goTo(current + (diff > 0 ? 1 : -1));
+  }, { passive: true });
+
+  buildDotsList();
+  goTo(current);
+}
+
 // ── Boot ──────────────────────────────────────
-document.addEventListener('DOMContentLoaded', () => { loadContent(); initGSAP(); });
+document.addEventListener('DOMContentLoaded', () => { loadContent(); initGSAP(); initReels(); });

@@ -65,10 +65,12 @@ async function loadContent() {
       c.projetos.forEach(p => {
         projects[p.key] = { title: p.titulo, behance: p.behance, images: p.galeria };
 
-        // Apply categoria to project card for filter system
+        // Apply categoria to project card and destaques for filter system
         if (p.categoria) {
           const card = document.querySelector(`.projeto-card[data-project="${p.key}"]`);
           if (card) card.dataset.categoria = p.categoria;
+          document.querySelectorAll(`.destaque-featured[data-project="${p.key}"], .destaque-item[data-project="${p.key}"]`)
+            .forEach(el => { el.dataset.categoria = p.categoria; });
         }
 
         const faixa = document.querySelector(`.projeto-faixa[data-project="${p.key}"]`);
@@ -295,6 +297,19 @@ document.querySelectorAll('.filtro-btn').forEach(btn => {
       const match = filtro === 'todos' || card.dataset.categoria === filtro;
       card.style.display = match ? '' : 'none';
     });
+
+    // filtrar destaques também
+    document.querySelectorAll('.destaque-featured, .destaque-item').forEach(el => {
+      const match = filtro === 'todos' || el.dataset.categoria === filtro;
+      el.style.display = match ? '' : 'none';
+    });
+
+    // esconder seção Destaques inteira se nenhum featured estiver visível
+    const section = document.querySelector('.destaques-section');
+    if (section) {
+      const anyFeatured = document.querySelector('.destaque-featured:not([style*="none"])');
+      section.style.display = anyFeatured ? '' : 'none';
+    }
   });
 });
 

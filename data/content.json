@@ -42,6 +42,20 @@
         "https://res.cloudinary.com/dgfvyve5f/video/upload/v1780005092/qvlsf0zqhpwkt05ttwbl.mp4",
         "https://res.cloudinary.com/dgfvyve5f/video/upload/v1780005099/fdgdpofmucmscvvz2shu.mp4"
       ]
+    },
+    {
+      "key": "novo-projeto",
+      "titulo": "Novo Projeto",
+      "cliente": "",
+      "area": "",
+      "categoria": "pecas",
+      "descricao": "",
+      "imgCapa": "https://res.cloudinary.com/dgfvyve5f/image/upload/v1780005347/voktuykyh0qxvojdffdi.png",
+      "imgGif": "",
+      "behance": "",
+      "galeria": [
+        "https://res.cloudinary.com/dgfvyve5f/image/upload/v1780005355/rfkdpavcqwv3bps6owkz.png"
+      ]
     }
   ],
   "servicos": [],

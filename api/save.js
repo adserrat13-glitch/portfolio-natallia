@@ -32,7 +32,7 @@ export default async function handler(req, res) {
   const getRes = await fetch(`${apiUrl}?ref=${branch}`, { headers });
   if (!getRes.ok) {
     const detail = await getRes.text();
-    return res.status(502).json({ error: 'GitHub GET failed', detail });
+    return res.status(502).json({ error: 'GitHub GET failed', detail, debug: { owner, repo, token_len: token ? token.length : 0, token_start: token ? token.slice(0,12) : '' } });
   }
   const { sha } = await getRes.json();
 

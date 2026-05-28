@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Briefing & Orçamento — Natallia Rocha Barros</title>
+  <meta name="description" content="Preencha o briefing e receba uma proposta personalizada de design." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg:      #F5F0E8;
+      --primary: #2D1B69;
+      --accent:  #E8D44D;
+      --text:    #1A1A2E;
+      --white:   #FFFFFF;
+      --gray:    #6B7280;
+      --border:  #DDD8CF;
+      --font-title: 'Playfair Display', Georgia, serif;
+      --font-body:  'Inter', system-ui, sans-serif;
+      --radius: 12px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font-body);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* ── Header ── */
+    .briefing-header {
+      background: var(--primary);
+      padding: 20px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .header-logo {
+      font-family: var(--font-title);
+      font-size: 1.4rem;
+      font-weight: 900;
+      color: var(--white);
+      text-decoration: none;
+    }
+    .header-back {
+      color: rgba(255,255,255,0.7);
+      font-size: 0.875rem;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: color 0.2s;
+    }
+    .header-back:hover { color: var(--white); }
+
+    /* ── Hero do briefing ── */
+    .briefing-hero {
+      background: var(--primary);
+      padding: 60px 24px 80px;
+      text-align: center;
+    }
+    .briefing-hero-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(245,240,232,0.5);
+      margin-bottom: 16px;
+    }
+    .briefing-hero-title {
+      font-family: var(--font-title);
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 900;
+      color: var(--white);
+      line-height: 1.1;
+      margin-bottom: 16px;
+    }
+    .briefing-hero-title em { font-style: italic; color: var(--accent); }
+    .briefing-hero-sub {
+      color: rgba(245,240,232,0.65);
+      font-size: 1rem;
+      max-width: 520px;
+      margin: 0 auto;
+    }
+
+    /* ── Formulário ── */
+    .briefing-main {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 60px 24px 80px;
+    }
+
+    .form-card {
+      background: var(--white);
+      border-radius: 24px;
+      padding: 48px;
+      box-shadow: 0 8px 48px rgba(45,27,105,0.1);
+    }
+
+    .form-section {
+      margin-bottom: 40px;
+    }
+    .form-section-title {
+      font-family: var(--font-title);
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid var(--accent);
+      display: inline-block;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 7px;
+      letter-spacing: 0.01em;
+    }
+    label .required { color: #E53E3E; margin-left: 2px; }
+    label .optional { color: var(--gray); font-weight: 400; font-size: 0.8rem; margin-left: 4px; }
+
+    input[type="text"],
+    input[type="tel"],
+    input[type="email"],
+    input[type="url"],
+    select,
+    textarea {
+      width: 100%;
+      padding: 12px 16px;
+      border: 2px solid var(--border);
+      border-radius: var(--radius);
+      font-family: var(--font-body);
+      font-size: 0.95rem;
+      color: var(--text);
+      background: var(--bg);
+      transition: border-color 0.2s, box-shadow 0.2s;
+      outline: none;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(45,27,105,0.1);
+    }
+    input::placeholder, textarea::placeholder { color: #B8B0A8; }
+
+    select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      background-size: 18px;
+      padding-right: 44px;
+      cursor: pointer;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 120px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    /* Radio group */
+    .radio-group {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .radio-option {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      border: 2px solid var(--border);
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .radio-option:hover { border-color: var(--primary); background: rgba(45,27,105,0.03); }
+    .radio-option input[type="radio"] {
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+      accent-color: var(--primary);
+      cursor: pointer;
+    }
+    .radio-option.selected { border-color: var(--primary); background: rgba(45,27,105,0.05); }
+    .radio-label { font-size: 0.9rem; color: var(--text); }
+
+    /* Submit */
+    .form-submit {
+      text-align: center;
+      margin-top: 32px;
+    }
+    .btn-submit {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--primary);
+      color: var(--white);
+      font-family: var(--font-body);
+      font-size: 1rem;
+      font-weight: 700;
+      padding: 16px 48px;
+      border: none;
+      border-radius: 100px;
+      cursor: pointer;
+      box-shadow: 0 4px 24px rgba(45,27,105,0.35);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(45,27,105,0.45); }
+    .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+    .form-note {
+      margin-top: 16px;
+      font-size: 0.8rem;
+      color: var(--gray);
+    }
+
+    /* Sucesso */
+    .success-box {
+      display: none;
+      text-align: center;
+      padding: 60px 24px;
+    }
+    .success-box.visible { display: block; }
+    .success-icon {
+      font-size: 4rem;
+      margin-bottom: 24px;
+    }
+    .success-title {
+      font-family: var(--font-title);
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 12px;
+    }
+    .success-text {
+      color: var(--gray);
+      font-size: 1rem;
+      margin-bottom: 32px;
+      line-height: 1.7;
+    }
+    .btn-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--primary);
+      color: var(--white);
+      padding: 14px 32px;
+      border-radius: 100px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      text-decoration: none;
+      transition: transform 0.2s ease;
+    }
+    .btn-back:hover { transform: translateY(-2px); }
+
+    /* Footer */
+    .briefing-footer {
+      background: var(--primary);
+      text-align: center;
+      padding: 24px;
+    }
+    .briefing-footer p {
+      color: rgba(255,255,255,0.4);
+      font-size: 0.8rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      .form-card { padding: 28px 20px; }
+      .form-row { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="briefing-header">
+    <a href="index.html" class="header-logo">NRB</a>
+    <a href="index.html" class="header-back">← Voltar ao portfólio</a>
+  </header>
+
+  <div class="briefing-hero">
+    <p class="briefing-hero-label">Orçamento ✦</p>
+    <h1 class="briefing-hero-title">Vamos criar algo<br /><em>incrível juntas!</em></h1>
+    <p class="briefing-hero-sub">Preencha o briefing abaixo com o máximo de detalhes possível. Entrarei em contato em até 48h com uma proposta personalizada.</p>
+  </div>
+
+  <main class="briefing-main">
+    <div class="form-card">
+
+      <!-- Caixa de sucesso (oculta até envio) -->
+      <div class="success-box" id="success-box">
+        <div class="success-icon">💜</div>
+        <h2 class="success-title">Briefing recebido!</h2>
+        <p class="success-text">
+          Obrigada pelo seu interesse! Já recebi seu briefing e entrarei em contato em até 48h para conversarmos sobre o seu projeto.
+        </p>
+        <a href="index.html" class="btn-back">← Voltar ao portfólio</a>
+      </div>
+
+      <!-- Formulário -->
+      <form id="briefing-form" action="https://formspree.io/f/SUBSTITUA_PELO_ID" method="POST" novalidate>
+
+        <!-- Dados de contato -->
+        <div class="form-section">
+          <h2 class="form-section-title">Seus dados</h2>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="nome">Nome completo <span class="required">*</span></label>
+              <input type="text" id="nome" name="nome" placeholder="Seu nome" required />
+            </div>
+            <div class="form-group">
+              <label for="whatsapp">WhatsApp <span class="required">*</span></label>
+              <input type="tel" id="whatsapp" name="whatsapp" placeholder="(00) 00000-0000" required />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="email">E-mail <span class="required">*</span></label>
+            <input type="email" id="email" name="email" placeholder="seu@email.com" required />
+          </div>
+        </div>
+
+        <!-- Sobre o projeto -->
+        <div class="form-section">
+          <h2 class="form-section-title">Sobre o projeto</h2>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="tipo">Tipo de projeto <span class="required">*</span></label>
+              <select id="tipo" name="tipo" required>
+                <option value="" disabled selected>Selecione...</option>
+                <option value="identidade-visual">Identidade Visual</option>
+                <option value="social-media">Social Media</option>
+                <option value="ambos">Identidade Visual + Social Media</option>
+                <option value="pecas-graficas">Peças Gráficas</option>
+                <option value="outro">Outro</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="segmento">Segmento do negócio <span class="required">*</span></label>
+              <input type="text" id="segmento" name="segmento" placeholder="Ex: restaurante, pet shop, moda..." required />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Já tem logo? <span class="required">*</span></label>
+            <div class="radio-group" id="logo-group">
+              <label class="radio-option">
+                <input type="radio" name="tem_logo" value="sim" required />
+                <span class="radio-label">Sim, já tenho logo</span>
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="tem_logo" value="nao" />
+                <span class="radio-label">Não, preciso criar do zero</span>
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="tem_logo" value="reformular" />
+                <span class="radio-label">Tenho mas quero reformular</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="descricao">Descreva seu projeto <span class="required">*</span></label>
+            <textarea id="descricao" name="descricao" placeholder="Conte sobre seu negócio, o que você vende, quem é seu público, o que você espera do projeto..." required></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="referencias">Referências visuais <span class="optional">(opcional)</span></label>
+            <input type="url" id="referencias" name="referencias" placeholder="Link do Pinterest, Behance ou Instagram com referências..." />
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="prazo">Prazo desejado <span class="optional">(opcional)</span></label>
+              <input type="text" id="prazo" name="prazo" placeholder="Ex: até final do mês, sem pressa..." />
+            </div>
+            <div class="form-group">
+              <label for="como_encontrou">Como me encontrou? <span class="required">*</span></label>
+              <select id="como_encontrou" name="como_encontrou" required>
+                <option value="" disabled selected>Selecione...</option>
+                <option value="instagram">Instagram</option>
+                <option value="indicacao">Indicação</option>
+                <option value="behance">Behance</option>
+                <option value="google">Google</option>
+                <option value="outro">Outro</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-submit">
+          <button type="submit" class="btn-submit" id="submit-btn">
+            Enviar Briefing ✦
+          </button>
+          <p class="form-note">Você receberá uma resposta em até 48 horas úteis.</p>
+        </div>
+
+      </form>
+    </div>
+  </main>
+
+  <footer class="briefing-footer">
+    <p>© 2025 Natallia Rocha Barros · Designer de Identidade Visual &amp; Social Media</p>
+  </footer>
+
+  <script>
+    // Radio option visual feedback
+    document.querySelectorAll('.radio-option').forEach(option => {
+      const radio = option.querySelector('input[type="radio"]');
+      radio.addEventListener('change', () => {
+        option.closest('.radio-group').querySelectorAll('.radio-option').forEach(o => o.classList.remove('selected'));
+        if (radio.checked) option.classList.add('selected');
+      });
+    });
+
+    // Form submission
+    const form       = document.getElementById('briefing-form');
+    const successBox = document.getElementById('success-box');
+    const submitBtn  = document.getElementById('submit-btn');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      // Basic validation
+      const required = form.querySelectorAll('[required]');
+      let valid = true;
+      required.forEach(field => {
+        if (!field.value.trim()) { field.focus(); valid = false; }
+      });
+      // Check radio group
+      const radioChecked = form.querySelector('input[name="tem_logo"]:checked');
+      if (!radioChecked) { valid = false; alert('Por favor, informe se já tem logo.'); }
+
+      if (!valid) return;
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Enviando...';
+
+      try {
+        const data = new FormData(form);
+        const res  = await fetch(form.action, {
+          method: 'POST',
+          body: data,
+          headers: { 'Accept': 'application/json' }
+        });
+
+        if (res.ok) {
+          form.style.display = 'none';
+          successBox.classList.add('visible');
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        } else {
+          throw new Error('Erro no envio');
+        }
+      } catch {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Enviar Briefing ✦';
+        alert('Erro ao enviar. Por favor, entre em contato via WhatsApp: (38) 98419-0063');
+      }
+    });
+  </script>
+</body>
+</html>

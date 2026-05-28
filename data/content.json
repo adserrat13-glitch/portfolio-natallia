@@ -1,0 +1,124 @@
+{
+  "cores": {
+    "--bg":      "#EAE7E2",
+    "--surface": "#F2EFE9",
+    "--dark":    "#1A1A2E",
+    "--primary": "#2D1B69",
+    "--accent":  "#E8D44D",
+    "--text":    "#1A1A2E",
+    "--white":   "#FFFFFF",
+    "--gray":    "#7A7670",
+    "--card-purple": "#1A1A2E",
+    "--card-yellow": "#E8D44D",
+    "--card-green":  "#1A6B4A",
+    "--footer-bg":   "#111120"
+  },
+  "hero": {
+    "bgImage": "assets/sabor-de-todos/f67a0a233490297.68b06b99b61ee.png",
+    "btnPrimary": "Ver Projetos",
+    "btnPrimaryHref": "#projetos",
+    "btnSecondary": "Solicitar Orçamento",
+    "btnSecondaryHref": "briefing.html"
+  },
+  "sobre": {
+    "foto": "",
+    "badge": "✦ Disponível para projetos",
+    "titulo": "Quem sou eu?",
+    "bio1": "Olá! Sou Natallia Rocha Barros, designer de identidade visual e social media apaixonada por transformar ideias em marcas memoráveis. Baseada em Montes Claros, MG, trabalho com empreendedores e marcas que querem se destacar com um visual autêntico e estratégico.",
+    "bio2": "Cada projeto é uma oportunidade de contar uma história única — do conceito à entrega final, com cuidado e criatividade em cada detalhe.",
+    "skills": ["Identidade Visual", "Social Media", "Branding", "Tipografia", "Design Gráfico", "Gestão de Redes"]
+  },
+  "projetos": [
+    {
+      "key": "sabor",
+      "titulo": "Sabor de Todos",
+      "cliente": "Sabor de Todos",
+      "area": "Identidade Visual",
+      "descricao": "Uma marca vibrante e acolhedora para pizzaria e cafeteria — sabor e identidade que conquistam à primeira vista.",
+      "imgCapa": "assets/sabor-de-todos/f67a0a233490297.68b06b99b61ee.png",
+      "imgGif": "assets/sabor-de-todos/ad16e6233490297.68b05ff617e79.gif",
+      "behance": "https://www.behance.net/gallery/233490297/Sabor-de-Todos-I-Pizza-Cafeteria",
+      "galeria": [
+        "assets/sabor-de-todos/ad16e6233490297.68b05ff617e79.gif",
+        "assets/sabor-de-todos/f67a0a233490297.68b06b99b61ee.png",
+        "assets/sabor-de-todos/9c65f1233490297.68b05ff614843.png",
+        "assets/sabor-de-todos/970ef3233490297.68b05ff615575.png",
+        "assets/sabor-de-todos/10846b233490297.68b05ff480d8a.png",
+        "assets/sabor-de-todos/8dce42233490297.68b05ff48155d.png",
+        "assets/sabor-de-todos/13cae9233490297.68b05ff616b40.png",
+        "assets/sabor-de-todos/7c92cc233490297.68b05ff615f47.png",
+        "assets/sabor-de-todos/310973233490297.68b05ff617662.png",
+        "assets/sabor-de-todos/0b1896233490297.68b05ff619411.png",
+        "assets/sabor-de-todos/290d6e233490297.68b05ff61895b.gif"
+      ]
+    },
+    {
+      "key": "miaumi",
+      "titulo": "Miaumi Pet Shop",
+      "cliente": "Miaumi",
+      "area": "Identidade Visual",
+      "descricao": "Identidade cheia de personalidade para pet shop — carinhosa, moderna e cheia de vida.",
+      "imgCapa": "assets/miaumi/2f89c4233003515.68a733bdc4e20.png",
+      "imgGif": "assets/miaumi/9b58a9233003515.68a733bdc4793.gif",
+      "behance": "https://www.behance.net/gallery/233003515/identidade-visual-Miaumi-Pet-Shop",
+      "galeria": [
+        "assets/miaumi/9b58a9233003515.68a733bdc4793.gif",
+        "assets/miaumi/2f89c4233003515.68a733bdc4e20.png",
+        "assets/miaumi/376d17233003515.68a733bdc6c9b.png",
+        "assets/miaumi/3a041b233003515.68a733bc9d874.png",
+        "assets/miaumi/7e473d233003515.68a733bc9de4a.png",
+        "assets/miaumi/8e1b33233003515.68a733bdc6139.png",
+        "assets/miaumi/fbf172233003515.68a733bdc670b.png",
+        "assets/miaumi/41871d233003515.68a733bdc3f78.gif"
+      ]
+    },
+    {
+      "key": "amora",
+      "titulo": "Amora Botanicals",
+      "cliente": "Amora Botanicals",
+      "area": "Identidade Visual",
+      "descricao": "Identidade sofisticada para perfumaria artesanal — elegância e natureza em cada detalhe.",
+      "imgCapa": "assets/amora/ad495e239534131.692b620bd9805.png",
+      "imgGif": "assets/amora/148909239534131.692b620bd84bd.gif",
+      "behance": "https://www.behance.net/gallery/239534131/Amora-Botanicals-perfumaria",
+      "galeria": [
+        "assets/amora/148909239534131.692b620bd84bd.gif",
+        "assets/amora/ad495e239534131.692b620bd9805.png",
+        "assets/amora/2ed39c239534131.692b620bd7809.png",
+        "assets/amora/897a93239534131.692b620bd9d00.png",
+        "assets/amora/9f2cd6239534131.692b620bda8e5.png",
+        "assets/amora/c01f12239534131.692b620bda1e8.png",
+        "assets/amora/fa8f8e239534131.692b620bdaff5.png",
+        "assets/amora/fd34c1239534131.692b620bd8049.png",
+        "assets/amora/b4cc5a239534131.692b620bd9319.gif"
+      ]
+    }
+  ],
+  "servicos": [
+    {
+      "titulo": "Identidade Visual",
+      "itens": ["Logo e variações", "Paleta de cores", "Tipografia", "Manual da marca", "Papelaria"]
+    },
+    {
+      "titulo": "Social Media",
+      "itens": ["Feed estratégico", "Stories & Reels", "Conteúdo criativo", "Gestão de redes", "Planejamento mensal"]
+    },
+    {
+      "titulo": "Peças Gráficas",
+      "itens": ["Flyers & Cartazes", "Cardápios", "Embalagens", "Cartões de visita", "Materiais impressos"]
+    }
+  ],
+  "contato": {
+    "titulo": "Vamos trabalhar juntas?",
+    "subtitulo": "Tenho interesse no seu projeto e adoraria ouvir sobre ele. Entre em contato ou preencha o briefing para receber uma proposta personalizada.",
+    "whatsapp": "5538984190063",
+    "instagram": "https://www.instagram.com/nati.rbmarketing",
+    "instagramHandle": "@nati.rbmarketing",
+    "email": "natalliarbarros98@gmail.com",
+    "behance": "https://www.behance.net/natalliarocha",
+    "pinterest": "https://pin.it/CGb613lLP"
+  },
+  "footer": {
+    "texto": "© 2025 Natallia Rocha Barros · Designer de Identidade Visual & Social Media"
+  }
+}

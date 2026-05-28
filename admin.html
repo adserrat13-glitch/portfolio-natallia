@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin — NRB Portfolio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #EAE7E2; --dark: #1A1A2E; --primary: #2D1B69;
+      --accent: #E8D44D; --white: #fff; --gray: #7A7670;
+      --radius: 10px; --shadow: 0 2px 12px rgba(26,26,46,.1);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--dark); min-height: 100vh; }
+
+    /* ── Login ── */
+    #login-screen {
+      min-height: 100vh; display: flex; align-items: center; justify-content: center;
+    }
+    .login-card {
+      background: var(--white); border-radius: 16px; padding: 48px 40px;
+      box-shadow: var(--shadow); width: 100%; max-width: 380px; text-align: center;
+    }
+    .login-logo { font-family: 'Playfair Display', serif; font-size: 2.5rem; font-weight: 700; margin-bottom: 8px; }
+    .login-sub { color: var(--gray); font-size: 0.875rem; margin-bottom: 32px; }
+    .login-card input {
+      width: 100%; padding: 12px 16px; border: 2px solid #e0ddd8; border-radius: 8px;
+      font-size: 1rem; font-family: inherit; margin-bottom: 16px; transition: border-color .2s;
+    }
+    .login-card input:focus { outline: none; border-color: var(--primary); }
+    .login-card button {
+      width: 100%; padding: 14px; background: var(--primary); color: var(--white);
+      border: none; border-radius: 8px; font-size: 1rem; font-weight: 600;
+      cursor: pointer; transition: background .2s;
+    }
+    .login-card button:hover { background: #3d2880; }
+    #login-error { color: #c0392b; font-size: 0.8rem; margin-top: 8px; display: none; }
+
+    /* ── Admin Layout ── */
+    #admin-panel { display: none; }
+    .admin-header {
+      background: var(--dark); color: var(--white); padding: 16px 32px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .admin-header h1 { font-family: 'Playfair Display', serif; font-size: 1.4rem; }
+    .admin-header-actions { display: flex; gap: 12px; }
+    .btn-save {
+      background: var(--accent); color: var(--primary); border: none; border-radius: 8px;
+      padding: 10px 20px; font-weight: 700; font-size: 0.875rem; cursor: pointer; transition: opacity .2s;
+    }
+    .btn-save:hover { opacity: .85; }
+    .btn-preview {
+      background: rgba(255,255,255,.12); color: var(--white); border: 1px solid rgba(255,255,255,.25);
+      border-radius: 8px; padding: 10px 20px; font-size: 0.875rem; font-weight: 500; cursor: pointer;
+      text-decoration: none; transition: background .2s;
+    }
+    .btn-preview:hover { background: rgba(255,255,255,.2); }
+    .btn-logout { background: none; color: rgba(255,255,255,.55); border: none; cursor: pointer; font-size: 0.8rem; }
+    .btn-logout:hover { color: var(--white); }
+
+    /* ── Tabs ── */
+    .admin-tabs { background: var(--white); border-bottom: 2px solid #e8e4de; padding: 0 32px; display: flex; gap: 0; }
+    .tab-btn {
+      background: none; border: none; padding: 14px 20px; font-size: 0.875rem;
+      font-weight: 500; cursor: pointer; border-bottom: 3px solid transparent;
+      color: var(--gray); transition: color .2s, border-color .2s; margin-bottom: -2px;
+    }
+    .tab-btn.active { color: var(--primary); border-color: var(--primary); font-weight: 600; }
+
+    /* ── Content ── */
+    .admin-content { padding: 32px; max-width: 960px; }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* ── Form elements ── */
+    .form-section { background: var(--white); border-radius: var(--radius); padding: 28px; margin-bottom: 20px; box-shadow: var(--shadow); }
+    .form-section h3 { font-size: 1rem; font-weight: 600; margin-bottom: 20px; color: var(--dark); border-bottom: 1px solid #e8e4de; padding-bottom: 12px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+    .form-row.full { grid-template-columns: 1fr; }
+    .form-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+    label { font-size: 0.8rem; font-weight: 600; color: var(--gray); text-transform: uppercase; letter-spacing: .05em; }
+    input[type="text"], input[type="url"], input[type="email"], input[type="tel"], textarea {
+      padding: 10px 14px; border: 2px solid #e0ddd8; border-radius: 8px;
+      font-size: 0.9rem; font-family: inherit; transition: border-color .2s; resize: vertical;
+    }
+    input:focus, textarea:focus { outline: none; border-color: var(--primary); }
+    textarea { min-height: 80px; }
+    .img-preview { width: 100%; max-height: 160px; object-fit: cover; border-radius: 8px; margin-top: 8px; display: none; }
+    .img-preview.show { display: block; }
+    .hint { font-size: 0.75rem; color: var(--gray); margin-top: 4px; }
+
+    /* ── Projeto card ── */
+    .projeto-card {
+      background: #f8f6f3; border-radius: var(--radius); padding: 20px; margin-bottom: 16px;
+      border: 1px solid #e8e4de;
+    }
+    .projeto-card-header { display: flex; align-items: center; justify-content: space-between; cursor: pointer; }
+    .projeto-card-header h4 { font-size: 0.95rem; font-weight: 600; }
+    .projeto-card-body { display: none; margin-top: 16px; }
+    .projeto-card-body.open { display: block; }
+    .btn-remove { background: #fee; color: #c0392b; border: 1px solid #f5c6c6; border-radius: 6px; padding: 6px 14px; font-size: 0.8rem; cursor: pointer; }
+    .btn-add { background: var(--primary); color: var(--white); border: none; border-radius: 8px; padding: 10px 18px; font-size: 0.875rem; font-weight: 600; cursor: pointer; margin-top: 8px; }
+    .btn-add:hover { background: #3d2880; }
+
+    /* ── Gallery list ── */
+    .gallery-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
+    .gallery-item { display: flex; align-items: center; gap: 8px; }
+    .gallery-item input { flex: 1; }
+    .gallery-item button { background: none; border: 1px solid #f5c6c6; color: #c0392b; border-radius: 6px; padding: 6px 10px; cursor: pointer; font-size: 0.8rem; white-space: nowrap; }
+    .btn-add-img { background: none; border: 2px dashed #c0bdb8; color: var(--gray); border-radius: 8px; padding: 8px 16px; cursor: pointer; font-size: 0.8rem; width: 100%; transition: border-color .2s; }
+    .btn-add-img:hover { border-color: var(--primary); color: var(--primary); }
+
+    /* ── Skills list ── */
+    .skills-list { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+    .skill-item { display: flex; align-items: center; gap: 4px; background: var(--bg); border: 1px solid #e0ddd8; border-radius: 20px; padding: 4px 12px; }
+    .skill-item input { border: none; background: none; font-size: 0.85rem; width: 120px; padding: 0; }
+    .skill-item button { background: none; border: none; color: var(--gray); cursor: pointer; font-size: 1rem; padding: 0 2px; }
+
+    /* ── Toast ── */
+    #toast {
+      position: fixed; bottom: 24px; right: 24px; background: var(--dark); color: var(--white);
+      padding: 12px 20px; border-radius: 8px; font-size: 0.875rem; font-weight: 500;
+      opacity: 0; transform: translateY(10px); transition: opacity .3s, transform .3s;
+      pointer-events: none; z-index: 9999;
+    }
+    #toast.show { opacity: 1; transform: translateY(0); }
+
+    /* ── Color Picker ── */
+    .color-row { display: grid; grid-template-columns: 44px 1fr 90px; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid #e8e4de; }
+    .color-row:last-child { border-bottom: none; }
+    .color-swatch {
+      width: 44px; height: 44px; border-radius: 8px; border: 2px solid rgba(0,0,0,.1);
+      cursor: pointer; padding: 0; appearance: none; -webkit-appearance: none; background: none;
+    }
+    .color-swatch::-webkit-color-swatch-wrapper { padding: 0; border-radius: 6px; }
+    .color-swatch::-webkit-color-swatch { border: none; border-radius: 6px; }
+    .color-name { font-size: .875rem; font-weight: 500; }
+    .color-desc { font-size: .75rem; color: var(--gray); }
+    .color-hex { font-size: .8rem; font-family: monospace; color: var(--gray); text-align: right; }
+    .preview-chip { height: 60px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: .65rem; font-weight: 600; letter-spacing: .05em; text-transform: uppercase; }
+
+    @media (max-width: 640px) {
+      .admin-header { flex-wrap: wrap; gap: 12px; }
+      .form-row { grid-template-columns: 1fr; }
+      .admin-content { padding: 16px; }
+      .admin-tabs { overflow-x: auto; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── Login ── -->
+<div id="login-screen">
+  <div class="login-card">
+    <div class="login-logo">NRB</div>
+    <p class="login-sub">Painel de Administração</p>
+    <input type="password" id="login-pwd" placeholder="Senha" autocomplete="current-password" />
+    <button onclick="doLogin()">Entrar</button>
+    <p id="login-error">Senha incorreta. Tente novamente.</p>
+  </div>
+</div>
+
+<!-- ── Admin ── -->
+<div id="admin-panel">
+
+  <div class="admin-header">
+    <h1>NRB · Admin</h1>
+    <div class="admin-header-actions">
+      <a href="index.html" target="_blank" class="btn-preview">Ver site ↗</a>
+      <button class="btn-save" onclick="exportJSON()">⬇ Exportar content.json</button>
+      <button class="btn-logout" onclick="logout()">Sair</button>
+    </div>
+  </div>
+
+  <div class="admin-tabs">
+    <button class="tab-btn active" onclick="switchTab('sobre', this)">Sobre</button>
+    <button class="tab-btn" onclick="switchTab('projetos', this)">Projetos</button>
+    <button class="tab-btn" onclick="switchTab('servicos', this)">Serviços</button>
+    <button class="tab-btn" onclick="switchTab('contato', this)">Contato</button>
+    <button class="tab-btn" onclick="switchTab('hero', this)">Hero</button>
+    <button class="tab-btn" onclick="switchTab('footer', this)">Footer</button>
+    <button class="tab-btn" onclick="switchTab('cores', this)">🎨 Cores</button>
+  </div>
+
+  <div class="admin-content">
+
+    <!-- SOBRE -->
+    <div id="tab-sobre" class="tab-panel active">
+      <div class="form-section">
+        <h3>Foto</h3>
+        <div class="form-group">
+          <label>Caminho da foto (ex: assets/foto-natallia.jpg)</label>
+          <input type="text" id="sobre-foto" placeholder="assets/foto-natallia.jpg" />
+          <span class="hint">Coloque a foto na pasta assets/ e escreva o caminho aqui</span>
+          <img id="sobre-foto-preview" class="img-preview" />
+        </div>
+        <div class="form-group">
+          <label>Badge</label>
+          <input type="text" id="sobre-badge" />
+        </div>
+      </div>
+      <div class="form-section">
+        <h3>Texto</h3>
+        <div class="form-group">
+          <label>Parágrafo 1</label>
+          <textarea id="sobre-bio1" rows="4"></textarea>
+        </div>
+        <div class="form-group">
+          <label>Parágrafo 2</label>
+          <textarea id="sobre-bio2" rows="3"></textarea>
+        </div>
+      </div>
+      <div class="form-section">
+        <h3>Skills</h3>
+        <div class="skills-list" id="skills-list"></div>
+        <button class="btn-add-img" onclick="addSkill()">+ Adicionar skill</button>
+      </div>
+    </div>
+
+    <!-- PROJETOS -->
+    <div id="tab-projetos" class="tab-panel">
+      <div id="projetos-list"></div>
+      <button class="btn-add" onclick="addProjeto()">+ Novo Projeto</button>
+    </div>
+
+    <!-- SERVIÇOS -->
+    <div id="tab-servicos" class="tab-panel">
+      <div id="servicos-list"></div>
+    </div>
+
+    <!-- CONTATO -->
+    <div id="tab-contato" class="tab-panel">
+      <div class="form-section">
+        <h3>Texto</h3>
+        <div class="form-group"><label>Subtítulo</label><textarea id="contato-subtitulo" rows="3"></textarea></div>
+      </div>
+      <div class="form-section">
+        <h3>Redes Sociais</h3>
+        <div class="form-row">
+          <div class="form-group"><label>WhatsApp (só números)</label><input type="tel" id="contato-whatsapp" placeholder="5538984190063" /></div>
+          <div class="form-group"><label>E-mail</label><input type="email" id="contato-email" /></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Instagram (URL completa)</label><input type="url" id="contato-instagram" /></div>
+          <div class="form-group"><label>Handle Instagram</label><input type="text" id="contato-instagramHandle" placeholder="@nati.rbmarketing" /></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Behance (URL)</label><input type="url" id="contato-behance" /></div>
+          <div class="form-group"><label>Pinterest (URL)</label><input type="url" id="contato-pinterest" /></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- HERO -->
+    <div id="tab-hero" class="tab-panel">
+      <div class="form-section">
+        <h3>Imagem de Fundo</h3>
+        <div class="form-group">
+          <label>Caminho da imagem</label>
+          <input type="text" id="hero-bgImage" />
+          <img id="hero-img-preview" class="img-preview" />
+        </div>
+      </div>
+      <div class="form-section">
+        <h3>Botões</h3>
+        <div class="form-row">
+          <div class="form-group"><label>Botão 1 — texto</label><input type="text" id="hero-btnPrimary" /></div>
+          <div class="form-group"><label>Botão 1 — link</label><input type="text" id="hero-btnPrimaryHref" /></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Botão 2 — texto</label><input type="text" id="hero-btnSecondary" /></div>
+          <div class="form-group"><label>Botão 2 — link</label><input type="text" id="hero-btnSecondaryHref" /></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FOOTER -->
+    <div id="tab-footer" class="tab-panel">
+      <div class="form-section">
+        <h3>Texto do Footer</h3>
+        <div class="form-group">
+          <input type="text" id="footer-texto" />
+        </div>
+      </div>
+    </div>
+
+    <!-- CORES -->
+    <div id="tab-cores" class="tab-panel">
+      <div class="form-section">
+        <h3>Cores Gerais</h3>
+        <p style="font-size:.8rem;color:var(--gray);margin-bottom:20px">Clique na cor para abrir o seletor. As mudanças são salvas no JSON ao exportar.</p>
+        <div id="cores-grid"></div>
+      </div>
+      <div class="form-section">
+        <h3>Preview ao vivo</h3>
+        <p style="font-size:.8rem;color:var(--gray)">As cores mudam em tempo real enquanto você ajusta. Exporte o JSON e substitua o arquivo para salvar no site.</p>
+        <div id="cores-preview" style="margin-top:16px;display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:12px"></div>
+      </div>
+    </div>
+
+  </div><!-- /admin-content -->
+</div><!-- /admin-panel -->
+
+<div id="toast"></div>
+
+<script>
+const PASS = 'nrb2025';
+let content = {};
+
+function doLogin() {
+  const val = document.getElementById('login-pwd').value;
+  if (val === PASS) {
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('admin-panel').style.display = 'block';
+    document.getElementById('login-error').style.display = 'none';
+    initAdmin();
+  } else {
+    document.getElementById('login-error').style.display = 'block';
+  }
+}
+document.getElementById('login-pwd').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+
+function logout() {
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('admin-panel').style.display = 'none';
+  document.getElementById('login-pwd').value = '';
+}
+
+function switchTab(name, btn) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  btn.classList.add('active');
+}
+
+async function initAdmin() {
+  try {
+    const res = await fetch('data/content.json');
+    content = await res.json();
+  } catch(e) {
+    content = {};
+    toast('Não foi possível carregar content.json — usando padrões');
+  }
+  populateForm();
+}
+
+function populateForm() {
+  const s = content.sobre || {};
+  setVal('sobre-foto', s.foto || '');
+  setVal('sobre-badge', s.badge || '');
+  setVal('sobre-bio1', s.bio1 || '');
+  setVal('sobre-bio2', s.bio2 || '');
+  renderSkills(s.skills || []);
+  previewImg('sobre-foto', 'sobre-foto-preview');
+
+  const h = content.hero || {};
+  setVal('hero-bgImage', h.bgImage || '');
+  setVal('hero-btnPrimary', h.btnPrimary || '');
+  setVal('hero-btnPrimaryHref', h.btnPrimaryHref || '');
+  setVal('hero-btnSecondary', h.btnSecondary || '');
+  setVal('hero-btnSecondaryHref', h.btnSecondaryHref || '');
+  previewImg('hero-bgImage', 'hero-img-preview');
+
+  renderProjetos(content.projetos || []);
+  renderServicos(content.servicos || []);
+
+  const ct = content.contato || {};
+  setVal('contato-subtitulo', ct.subtitulo || '');
+  setVal('contato-whatsapp', ct.whatsapp || '');
+  setVal('contato-email', ct.email || '');
+  setVal('contato-instagram', ct.instagram || '');
+  setVal('contato-instagramHandle', ct.instagramHandle || '');
+  setVal('contato-behance', ct.behance || '');
+  setVal('contato-pinterest', ct.pinterest || '');
+
+  setVal('footer-texto', (content.footer || {}).texto || '');
+
+  renderCores(content.cores || DEFAULT_CORES);
+}
+
+function setVal(id, val) {
+  const el = document.getElementById(id);
+  if (el) el.value = val;
+}
+
+function previewImg(inputId, previewId) {
+  const input = document.getElementById(inputId);
+  const preview = document.getElementById(previewId);
+  if (!input || !preview) return;
+  const update = () => {
+    if (input.value) { preview.src = input.value; preview.classList.add('show'); }
+    else { preview.classList.remove('show'); }
+  };
+  input.addEventListener('input', update);
+  update();
+}
+
+/* ── Skills ── */
+function renderSkills(skills) {
+  const list = document.getElementById('skills-list');
+  while (list.firstChild) list.removeChild(list.firstChild);
+  skills.forEach((sk, i) => {
+    const div = document.createElement('div');
+    div.className = 'skill-item';
+    const input = document.createElement('input');
+    input.type = 'text'; input.value = sk; input.dataset.skill = i;
+    const btn = document.createElement('button');
+    btn.title = 'Remover'; btn.textContent = '×';
+    btn.addEventListener('click', () => removeSkill(i));
+    div.appendChild(input); div.appendChild(btn);
+    list.appendChild(div);
+  });
+}
+function addSkill() {
+  const skills = getSkills();
+  skills.push('Nova skill');
+  renderSkills(skills);
+}
+function removeSkill(i) {
+  const skills = getSkills();
+  skills.splice(i, 1);
+  renderSkills(skills);
+}
+function getSkills() {
+  return Array.from(document.querySelectorAll('#skills-list input')).map(el => el.value);
+}
+
+/* ── Projetos ── */
+function makeField(labelText, field, value, type) {
+  const group = document.createElement('div');
+  group.className = 'form-group';
+  const lbl = document.createElement('label');
+  lbl.textContent = labelText;
+  const input = type === 'textarea' ? document.createElement('textarea') : document.createElement('input');
+  if (type && type !== 'textarea') input.type = type;
+  input.dataset.field = field;
+  input.value = value || '';
+  group.appendChild(lbl); group.appendChild(input);
+  return group;
+}
+
+function makeRow(...children) {
+  const row = document.createElement('div');
+  row.className = 'form-row';
+  children.forEach(c => row.appendChild(c));
+  return row;
+}
+
+function makeGalleryItem(projetoIdx, imgSrc) {
+  const div = document.createElement('div');
+  div.className = 'gallery-item';
+  const input = document.createElement('input');
+  input.type = 'text'; input.value = imgSrc || ''; input.placeholder = 'assets/pasta/imagem.png';
+  const btn = document.createElement('button');
+  btn.textContent = 'Remover';
+  btn.addEventListener('click', () => div.remove());
+  div.appendChild(input); div.appendChild(btn);
+  return div;
+}
+
+function renderProjetos(projetos) {
+  const list = document.getElementById('projetos-list');
+  while (list.firstChild) list.removeChild(list.firstChild);
+
+  projetos.forEach((p, i) => {
+    const card = document.createElement('div');
+    card.className = 'projeto-card'; card.dataset.index = i;
+
+    // Header
+    const header = document.createElement('div');
+    header.className = 'projeto-card-header';
+    const h4 = document.createElement('h4');
+    h4.textContent = p.titulo;
+    const actionsDiv = document.createElement('div');
+    actionsDiv.style.cssText = 'display:flex;gap:8px';
+    const removeBtn = document.createElement('button');
+    removeBtn.className = 'btn-remove'; removeBtn.textContent = 'Remover';
+    removeBtn.addEventListener('click', e => { e.stopPropagation(); removeProjeto(i); });
+    const arrow = document.createElement('span'); arrow.textContent = '▼';
+    actionsDiv.appendChild(removeBtn); actionsDiv.appendChild(arrow);
+    header.appendChild(h4); header.appendChild(actionsDiv);
+    header.addEventListener('click', () => toggleProjeto(header));
+
+    // Body
+    const body = document.createElement('div');
+    body.className = 'projeto-card-body';
+    body.appendChild(makeRow(makeField('Chave (key)', 'key', p.key), makeField('Título', 'titulo', p.titulo)));
+    body.appendChild(makeRow(makeField('Cliente', 'cliente', p.cliente), makeField('Área', 'area', p.area)));
+    body.appendChild(makeField('Descrição', 'descricao', p.descricao, 'textarea'));
+    body.appendChild(makeRow(makeField('Imagem capa (caminho)', 'imgCapa', p.imgCapa), makeField('GIF animado (caminho)', 'imgGif', p.imgGif)));
+    body.appendChild(makeField('Link Behance', 'behance', p.behance, 'url'));
+
+    const galGroup = document.createElement('div');
+    galGroup.className = 'form-group';
+    const galLabel = document.createElement('label');
+    galLabel.textContent = 'Imagens da galeria';
+    const galList = document.createElement('div');
+    galList.className = 'gallery-list'; galList.dataset.gallery = i;
+    (p.galeria || []).forEach(img => galList.appendChild(makeGalleryItem(i, img)));
+    const addImgBtn = document.createElement('button');
+    addImgBtn.className = 'btn-add-img'; addImgBtn.textContent = '+ Adicionar imagem';
+    addImgBtn.addEventListener('click', () => galList.appendChild(makeGalleryItem(i, '')));
+    galGroup.appendChild(galLabel); galGroup.appendChild(galList); galGroup.appendChild(addImgBtn);
+    body.appendChild(galGroup);
+
+    card.appendChild(header); card.appendChild(body);
+    list.appendChild(card);
+  });
+}
+
+function toggleProjeto(header) {
+  header.nextElementSibling.classList.toggle('open');
+  header.querySelector('span').textContent = header.nextElementSibling.classList.contains('open') ? '▲' : '▼';
+}
+
+function addProjeto() {
+  const projetos = getProjetosData();
+  projetos.push({ key: 'novo-projeto', titulo: 'Novo Projeto', cliente: '', area: 'Identidade Visual', descricao: '', imgCapa: '', imgGif: '', behance: '', galeria: [] });
+  renderProjetos(projetos);
+  toast('Novo projeto adicionado — preencha os dados e exporte o JSON');
+}
+
+function removeProjeto(i) {
+  if (!confirm('Remover este projeto?')) return;
+  const projetos = getProjetosData();
+  projetos.splice(i, 1);
+  renderProjetos(projetos);
+}
+
+
+
+function getProjetosData() {
+  return Array.from(document.querySelectorAll('#projetos-list .projeto-card')).map(card => {
+    const get = field => { const el = card.querySelector(`[data-field="${field}"]`); return el ? el.value : ''; };
+    const galList = card.querySelector('.gallery-list');
+    const galeria = galList ? Array.from(galList.querySelectorAll('input')).map(i => i.value).filter(Boolean) : [];
+    return { key: get('key'), titulo: get('titulo'), cliente: get('cliente'), area: get('area'), descricao: get('descricao'), imgCapa: get('imgCapa'), imgGif: get('imgGif'), behance: get('behance'), galeria };
+  });
+}
+
+/* ── Serviços ── */
+function makeSvcItem(texto) {
+  const div = document.createElement('div');
+  div.className = 'gallery-item';
+  const input = document.createElement('input');
+  input.type = 'text'; input.value = texto || '';
+  const btn = document.createElement('button');
+  btn.textContent = 'Remover';
+  btn.addEventListener('click', () => div.remove());
+  div.appendChild(input); div.appendChild(btn);
+  return div;
+}
+
+function renderServicos(servicos) {
+  const list = document.getElementById('servicos-list');
+  while (list.firstChild) list.removeChild(list.firstChild);
+  const cores = ['Roxo (escuro)', 'Amarelo', 'Verde'];
+  servicos.forEach((sv, i) => {
+    const div = document.createElement('div');
+    div.className = 'form-section';
+
+    const h3 = document.createElement('h3');
+    h3.textContent = `Serviço ${i + 1} — ${cores[i] || ''}`;
+
+    const tituloGroup = document.createElement('div');
+    tituloGroup.className = 'form-group';
+    const tituloLabel = document.createElement('label');
+    tituloLabel.textContent = 'Título';
+    const tituloInput = document.createElement('input');
+    tituloInput.type = 'text'; tituloInput.value = sv.titulo || '';
+    tituloInput.dataset.svc = i; tituloInput.dataset.field = 'titulo';
+    tituloGroup.appendChild(tituloLabel); tituloGroup.appendChild(tituloInput);
+
+    const itemsLabel = document.createElement('label');
+    itemsLabel.textContent = 'Itens';
+    itemsLabel.style.cssText = 'font-size:.75rem;font-weight:600;color:var(--gray);text-transform:uppercase;letter-spacing:.05em';
+
+    const svcItems = document.createElement('div');
+    svcItems.className = 'svc-items'; svcItems.dataset.svc = i; svcItems.style.marginTop = '6px';
+    (sv.itens || []).forEach(it => svcItems.appendChild(makeSvcItem(it)));
+
+    const addBtn = document.createElement('button');
+    addBtn.className = 'btn-add-img'; addBtn.textContent = '+ Adicionar item';
+    addBtn.style.marginTop = '8px';
+    addBtn.addEventListener('click', () => svcItems.appendChild(makeSvcItem('')));
+
+    div.appendChild(h3); div.appendChild(tituloGroup);
+    div.appendChild(itemsLabel); div.appendChild(svcItems); div.appendChild(addBtn);
+    list.appendChild(div);
+  });
+}
+
+
+
+function getServicosData() {
+  return Array.from(document.querySelectorAll('#servicos-list .form-section')).map((sec, i) => {
+    const titulo = sec.querySelector(`[data-field="titulo"]`).value;
+    const itens = Array.from(sec.querySelectorAll('.svc-items input')).map(el => el.value).filter(Boolean);
+    return { titulo, itens };
+  });
+}
+
+/* ── Cores ── */
+const COLOR_DEFS = [
+  { key: '--bg',          name: 'Fundo geral',          desc: 'Cor de fundo de todas as páginas' },
+  { key: '--surface',     name: 'Superfície',            desc: 'Fundo de cards e elementos internos' },
+  { key: '--dark',        name: 'Seções escuras',        desc: 'Fundo das seções Sobre, Carrossel, Contato' },
+  { key: '--primary',     name: 'Roxo (destaque)',       desc: 'Botões, links, detalhes de cor' },
+  { key: '--accent',      name: 'Amarelo',               desc: 'CTA principal, dots do modal, badge' },
+  { key: '--text',        name: 'Texto principal',       desc: 'Cor de todo o texto em fundo claro' },
+  { key: '--white',       name: 'Branco',                desc: 'Texto em fundo escuro, fundo do modal' },
+  { key: '--gray',        name: 'Cinza',                 desc: 'Texto secundário, labels, subtítulos' },
+  { key: '--card-purple', name: 'Card Identidade Visual',desc: 'Fundo do 1º card de serviços' },
+  { key: '--card-yellow', name: 'Card Social Media',     desc: 'Fundo do 2º card de serviços' },
+  { key: '--card-green',  name: 'Card Peças Gráficas',   desc: 'Fundo do 3º card de serviços' },
+  { key: '--footer-bg',   name: 'Fundo do Footer',       desc: 'Cor de fundo do rodapé' },
+];
+
+const DEFAULT_CORES = {
+  '--bg': '#EAE7E2', '--surface': '#F2EFE9', '--dark': '#1A1A2E',
+  '--primary': '#2D1B69', '--accent': '#E8D44D', '--text': '#1A1A2E',
+  '--white': '#FFFFFF', '--gray': '#7A7670',
+  '--card-purple': '#1A1A2E', '--card-yellow': '#E8D44D',
+  '--card-green': '#1A6B4A', '--footer-bg': '#111120',
+};
+
+function renderCores(cores) {
+  const grid = document.getElementById('cores-grid');
+  const preview = document.getElementById('cores-preview');
+  while (grid.firstChild) grid.removeChild(grid.firstChild);
+  while (preview.firstChild) preview.removeChild(preview.firstChild);
+
+  COLOR_DEFS.forEach(def => {
+    const val = (cores && cores[def.key]) || DEFAULT_CORES[def.key] || '#000000';
+
+    // Row
+    const row = document.createElement('div');
+    row.className = 'color-row';
+
+    const swatch = document.createElement('input');
+    swatch.type = 'color'; swatch.className = 'color-swatch';
+    swatch.value = val; swatch.dataset.colorKey = def.key;
+    swatch.addEventListener('input', e => onColorChange(def.key, e.target.value));
+
+    const info = document.createElement('div');
+    const nm = document.createElement('div');
+    nm.className = 'color-name'; nm.textContent = def.name;
+    const ds = document.createElement('div');
+    ds.className = 'color-desc'; ds.textContent = def.desc;
+    info.appendChild(nm); info.appendChild(ds);
+
+    const hexEl = document.createElement('div');
+    hexEl.className = 'color-hex'; hexEl.textContent = val.toUpperCase();
+    hexEl.dataset.hexFor = def.key;
+
+    row.appendChild(swatch); row.appendChild(info); row.appendChild(hexEl);
+    grid.appendChild(row);
+
+    // Preview chip
+    const chip = document.createElement('div');
+    chip.className = 'preview-chip';
+    chip.style.background = val;
+    chip.style.color = isLight(val) ? '#1A1A2E' : '#FFFFFF';
+    chip.textContent = def.name.split(' ')[0];
+    chip.dataset.chipFor = def.key;
+    preview.appendChild(chip);
+  });
+}
+
+function onColorChange(key, val) {
+  // Update hex label
+  const hexEl = document.querySelector(`[data-hex-for="${key}"]`);
+  if (hexEl) hexEl.textContent = val.toUpperCase();
+  // Update preview chip
+  const chip = document.querySelector(`[data-chip-for="${key}"]`);
+  if (chip) { chip.style.background = val; chip.style.color = isLight(val) ? '#1A1A2E' : '#FFFFFF'; }
+  // Live apply to admin UI (non-site vars only, to show feel)
+  const siteVars = ['--bg','--surface','--dark','--primary','--accent','--text','--white','--gray'];
+  if (siteVars.includes(key)) document.documentElement.style.setProperty(key, val);
+}
+
+function getCoresData() {
+  const result = {};
+  document.querySelectorAll('.color-swatch').forEach(el => {
+    result[el.dataset.colorKey] = el.value;
+  });
+  return result;
+}
+
+function isLight(hex) {
+  const r = parseInt(hex.slice(1,3),16), g = parseInt(hex.slice(3,5),16), b = parseInt(hex.slice(5,7),16);
+  return (r * 299 + g * 587 + b * 114) / 1000 > 128;
+}
+
+/* ── Export ── */
+function buildContent() {
+  return {
+    cores: getCoresData(),
+    hero: {
+      bgImage: document.getElementById('hero-bgImage').value,
+      btnPrimary: document.getElementById('hero-btnPrimary').value,
+      btnPrimaryHref: document.getElementById('hero-btnPrimaryHref').value,
+      btnSecondary: document.getElementById('hero-btnSecondary').value,
+      btnSecondaryHref: document.getElementById('hero-btnSecondaryHref').value,
+    },
+    sobre: {
+      foto: document.getElementById('sobre-foto').value,
+      badge: document.getElementById('sobre-badge').value,
+      bio1: document.getElementById('sobre-bio1').value,
+      bio2: document.getElementById('sobre-bio2').value,
+      skills: getSkills(),
+    },
+    projetos: getProjetosData(),
+    servicos: getServicosData(),
+    contato: {
+      subtitulo: document.getElementById('contato-subtitulo').value,
+      whatsapp: document.getElementById('contato-whatsapp').value,
+      email: document.getElementById('contato-email').value,
+      instagram: document.getElementById('contato-instagram').value,
+      instagramHandle: document.getElementById('contato-instagramHandle').value,
+      behance: document.getElementById('contato-behance').value,
+      pinterest: document.getElementById('contato-pinterest').value,
+    },
+    footer: { texto: document.getElementById('footer-texto').value },
+  };
+}
+
+function exportJSON() {
+  const data = buildContent();
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'content.json';
+  a.click();
+  URL.revokeObjectURL(a.href);
+  toast('content.json baixado! Substitua o arquivo em data/content.json e faça push para o GitHub.');
+}
+
+/* ── Utils ── */
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 4000);
+}
+</script>
+</body>
+</html>

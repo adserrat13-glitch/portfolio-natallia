@@ -2,8 +2,8 @@
   "cores": {
     "--bg": "#eae7e2",
     "--surface": "#f2efe9",
-    "--dark": "#aeaeea",
-    "--primary": "#aeaeea",
+    "--dark": "#1a1a2e",
+    "--primary": "#2d1b69",
     "--accent": "#5f5e87",
     "--text": "#4c4c5d",
     "--white": "#ffffff",
@@ -28,6 +28,48 @@
     "skills": []
   },
   "projetos": [
+    {
+      "key": "sabor",
+      "titulo": "Sabor de Todos",
+      "cliente": "Pizzaria & Cafeteria",
+      "area": "Identidade Visual",
+      "categoria": "identidade",
+      "descricao": "",
+      "imgCapa": "assets/sabor-de-todos/f67a0a233490297.68b06b99b61ee.png",
+      "imgGif": "assets/sabor-de-todos/ad16e6233490297.68b05ff617e79.gif",
+      "behance": "",
+      "galeria": [
+        "assets/sabor-de-todos/f67a0a233490297.68b06b99b61ee.png"
+      ]
+    },
+    {
+      "key": "miaumi",
+      "titulo": "Miaumi Pet Shop",
+      "cliente": "Pet Shop",
+      "area": "Identidade Visual",
+      "categoria": "identidade",
+      "descricao": "",
+      "imgCapa": "assets/miaumi/2f89c4233003515.68a733bdc4e20.png",
+      "imgGif": "assets/miaumi/9b58a9233003515.68a733bdc4793.gif",
+      "behance": "",
+      "galeria": [
+        "assets/miaumi/2f89c4233003515.68a733bdc4e20.png"
+      ]
+    },
+    {
+      "key": "amora",
+      "titulo": "Amora Botanicals",
+      "cliente": "Perfumaria",
+      "area": "Identidade Visual",
+      "categoria": "identidade",
+      "descricao": "",
+      "imgCapa": "assets/amora/ad495e239534131.692b620bd9805.png",
+      "imgGif": "assets/amora/148909239534131.692b620bd84bd.gif",
+      "behance": "",
+      "galeria": [
+        "assets/amora/ad495e239534131.692b620bd9805.png"
+      ]
+    },
     {
       "key": "posts-instagram",
       "titulo": "Posts Instagram",

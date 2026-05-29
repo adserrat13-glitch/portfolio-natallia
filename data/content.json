@@ -29,33 +29,37 @@
   },
   "projetos": [
     {
-      "key": "novo-projeto",
-      "titulo": "Novo Projeto",
-      "cliente": "",
-      "area": "",
-      "categoria": "reels",
-      "descricao": "",
-      "imgCapa": "",
+      "key": "posts-instagram",
+      "titulo": "Posts Instagram",
+      "cliente": "Dra. Patrícia & Natália",
+      "area": "Posts · Instagram",
+      "categoria": "social",
+      "descricao": "Criação de posts para Instagram com identidade visual coesa.",
+      "imgCapa": "assets/posts-instagram/post2.png",
       "imgGif": "",
       "behance": "",
       "galeria": [
-        "https://res.cloudinary.com/dgfvyve5f/video/upload/v1780005092/qvlsf0zqhpwkt05ttwbl.mp4",
-        "https://res.cloudinary.com/dgfvyve5f/video/upload/v1780005099/fdgdpofmucmscvvz2shu.mp4"
+        "assets/posts-instagram/post1.png",
+        "assets/posts-instagram/post2.png",
+        "assets/posts-instagram/post3.png",
+        "assets/posts-instagram/post4.png"
       ]
     },
     {
-      "key": "novo-projeto",
-      "titulo": "Novo Projeto",
+      "key": "trabalhos-graficos",
+      "titulo": "Peças Gráficas",
       "cliente": "",
-      "area": "",
+      "area": "Design Gráfico",
       "categoria": "pecas",
-      "descricao": "",
-      "imgCapa": "https://res.cloudinary.com/dgfvyve5f/image/upload/v1780005347/voktuykyh0qxvojdffdi.png",
+      "descricao": "Peças gráficas variadas para diferentes clientes.",
+      "imgCapa": "assets/trabalhos-graficos/tg1.jpeg",
       "imgGif": "",
       "behance": "",
       "galeria": [
-        "https://res.cloudinary.com/dgfvyve5f/image/upload/v1780005355/rfkdpavcqwv3bps6owkz.png",
-        "https://res.cloudinary.com/dgfvyve5f/raw/upload/v1780005866/vzohphl9loi1dasjp36z.json"
+        "assets/trabalhos-graficos/tg1.jpeg",
+        "assets/trabalhos-graficos/tg2.jpeg",
+        "assets/trabalhos-graficos/tg3.jpeg",
+        "assets/trabalhos-graficos/tg4.jpeg"
       ]
     }
   ],
@@ -77,13 +81,13 @@
       "id": 0,
       "titulo": "Reel 1",
       "tag": "Social Media",
-      "videoUrl": ""
+      "videoUrl": "assets/reels/reel1.mp4"
     },
     {
       "id": 1,
       "titulo": "Reel 2",
       "tag": "Social Media",
-      "videoUrl": ""
+      "videoUrl": "assets/reels/reel2.mp4"
     },
     {
       "id": 2,

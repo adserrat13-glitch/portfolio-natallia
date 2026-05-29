@@ -5,7 +5,7 @@
 // ── Content loader (CMS) ──────────────────────
 async function loadContent() {
   try {
-    const res = await fetch('data/content.json');
+    const res = await fetch('data/content.json?v=' + Date.now());
     if (!res.ok) return;
     const c = await res.json();
 
@@ -60,82 +60,81 @@ async function loadContent() {
       }
     }
 
-    // Projetos — gera cards dinamicamente a partir do content.json
+    // Projetos — upsert: atualiza cards existentes no HTML e adiciona novos do JSON
     if (Array.isArray(c.projetos) && c.projetos.length > 0) {
       const grid = document.getElementById('projetos-grid');
       if (grid) {
-        // limpar cards existentes e reconstruir do JSON
-        while (grid.firstChild) grid.removeChild(grid.firstChild);
+        const categoriaMap = {
+          identidade: 'Identidade Visual',
+          social: 'Social Media',
+          pecas: 'Peças Gráficas',
+          reels: 'Reels',
+        };
 
         c.projetos.forEach(p => {
-          // Atualiza objeto modal
           projects[p.key] = { title: p.titulo, behance: p.behance, images: p.galeria || [] };
+          const categoriaLabel = categoriaMap[p.categoria] || p.categoria || 'Identidade Visual';
 
-          // Mapear categoria → label legível
-          const categoriaLabel = {
-            identidade: 'Identidade Visual',
-            social: 'Social Media',
-            pecas: 'Peças Gráficas',
-            reels: 'Reels',
-          }[p.categoria] || p.categoria || 'Identidade Visual';
+          let article = grid.querySelector(`[data-project="${p.key}"]`);
+          if (article) {
+            // Atualizar card existente
+            article.dataset.categoria = p.categoria || 'identidade';
+            const capaImg = article.querySelector('.projeto-card-img > img');
+            if (capaImg && p.imgCapa) capaImg.src = p.imgCapa;
+            const gifImg = article.querySelector('.projeto-card-hover img');
+            if (gifImg) gifImg.src = p.imgGif || p.imgCapa || '';
+            const tagEl = article.querySelector('.projeto-card-tag');
+            if (tagEl) tagEl.textContent = categoriaLabel;
+            const titleEl = article.querySelector('.projeto-card-title');
+            if (titleEl) titleEl.textContent = p.titulo;
+            const clienteEl = article.querySelector('.projeto-card-cliente');
+            if (clienteEl) clienteEl.textContent = p.area || p.cliente || '';
+          } else {
+            // Criar card novo
+            article = document.createElement('article');
+            article.className = 'projeto-card reveal';
+            article.dataset.project = p.key;
+            article.dataset.categoria = p.categoria || 'identidade';
 
-          // Criar card
-          const article = document.createElement('article');
-          article.className = 'projeto-card reveal';
-          article.dataset.project = p.key;
-          article.dataset.categoria = p.categoria || 'identidade';
+            const imgWrap = document.createElement('div');
+            imgWrap.className = 'projeto-card-img';
+            const capaImg = document.createElement('img');
+            capaImg.src = p.imgCapa || ''; capaImg.alt = p.titulo; capaImg.loading = 'lazy';
+            const hoverDiv = document.createElement('div');
+            hoverDiv.className = 'projeto-card-hover';
+            const gifImg = document.createElement('img');
+            gifImg.src = p.imgGif || p.imgCapa || ''; gifImg.alt = p.titulo + ' animado'; gifImg.loading = 'lazy';
+            const ctaSpan = document.createElement('span');
+            ctaSpan.className = 'projeto-card-cta'; ctaSpan.textContent = 'Ver Projeto ↗';
+            hoverDiv.appendChild(gifImg); hoverDiv.appendChild(ctaSpan);
+            imgWrap.appendChild(capaImg); imgWrap.appendChild(hoverDiv);
 
-          const imgWrap = document.createElement('div');
-          imgWrap.className = 'projeto-card-img';
+            const info = document.createElement('div');
+            info.className = 'projeto-card-info';
+            const tag = document.createElement('span');
+            tag.className = 'projeto-card-tag'; tag.textContent = categoriaLabel;
+            const title = document.createElement('h3');
+            title.className = 'projeto-card-title'; title.textContent = p.titulo;
+            const cliente = document.createElement('p');
+            cliente.className = 'projeto-card-cliente'; cliente.textContent = p.area || p.cliente || '';
+            info.appendChild(tag); info.appendChild(title); info.appendChild(cliente);
+            article.appendChild(imgWrap); article.appendChild(info);
 
-          const capaImg = document.createElement('img');
-          capaImg.src = p.imgCapa || '';
-          capaImg.alt = p.titulo;
-          capaImg.loading = 'lazy';
+            article.addEventListener('click', () => openModal(p.key));
+            article.addEventListener('keydown', e => {
+              if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openModal(p.key); }
+            });
+            article.setAttribute('role', 'button');
+            article.setAttribute('tabindex', '0');
+            grid.appendChild(article);
+          }
 
-          const hoverDiv = document.createElement('div');
-          hoverDiv.className = 'projeto-card-hover';
-          const gifImg = document.createElement('img');
-          gifImg.src = p.imgGif || p.imgCapa || '';
-          gifImg.alt = p.titulo + ' animado';
-          gifImg.loading = 'lazy';
-          const ctaSpan = document.createElement('span');
-          ctaSpan.className = 'projeto-card-cta';
-          ctaSpan.textContent = 'Ver Projeto ↗';
-          hoverDiv.appendChild(gifImg);
-          hoverDiv.appendChild(ctaSpan);
-
-          imgWrap.appendChild(capaImg);
-          imgWrap.appendChild(hoverDiv);
-
-          const info = document.createElement('div');
-          info.className = 'projeto-card-info';
-          const tag = document.createElement('span');
-          tag.className = 'projeto-card-tag';
-          tag.textContent = categoriaLabel;
-          const title = document.createElement('h3');
-          title.className = 'projeto-card-title';
-          title.textContent = p.titulo;
-          const cliente = document.createElement('p');
-          cliente.className = 'projeto-card-cliente';
-          cliente.textContent = p.area || p.cliente || '';
-          info.appendChild(tag); info.appendChild(title); info.appendChild(cliente);
-
-          article.appendChild(imgWrap);
-          article.appendChild(info);
-
-          // Evento de clique para abrir modal
-          article.addEventListener('click', () => openModal(p.key));
-          article.addEventListener('keydown', e => {
-            if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openModal(p.key); }
-          });
-          article.setAttribute('role', 'button');
-          article.setAttribute('tabindex', '0');
-
-          grid.appendChild(article);
+          // Atualizar data-categoria nos destaques
+          document.querySelectorAll(`.destaque-featured[data-project="${p.key}"], .destaque-item[data-project="${p.key}"]`)
+            .forEach(el => { el.dataset.categoria = p.categoria || 'identidade'; });
         });
 
-        // Re-aplicar filtro ativo após reconstruir os cards
+        // Re-aplicar filtro ativo
         const activeBtn = document.querySelector('.filtro-btn.active');
         if (activeBtn) {
           const filtro = activeBtn.dataset.filtro;

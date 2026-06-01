@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Orçamento Online — Natallia Rocha Barros</title>
+  <meta name="description" content="Monte seu orçamento de design personalizado com Natallia Rocha Barros." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg:         #F5F0E8;
+      --surface:    #FFFFFF;
+      --primary:    #2D1B69;
+      --accent:     #E8D44D;
+      --text:       #1A1A2E;
+      --text-muted: #6B7280;
+      --border:     #DDD8CF;
+      --font-title: 'Playfair Display', Georgia, serif;
+      --font-body:  'Inter', system-ui, sans-serif;
+      --radius:     12px;
+      --shadow:     0 2px 12px rgba(26,26,46,0.08);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--font-body); background: var(--bg); color: var(--text); line-height: 1.6; min-height: 100vh; }
+
+    /* ── Header ── */
+    .orca-header {
+      background: var(--primary);
+      padding: 18px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky; top: 0; z-index: 100;
+      box-shadow: 0 2px 16px rgba(26,26,46,0.25);
+    }
+    .header-logo { font-family: var(--font-title); font-size: 1.4rem; font-weight: 900; color: #fff; text-decoration: none; }
+    .header-back { color: rgba(255,255,255,0.7); font-size: 0.875rem; text-decoration: none; display: flex; align-items: center; gap: 6px; transition: color 0.2s; }
+    .header-back:hover { color: #fff; }
+
+    /* ── Hero ── */
+    .orca-hero {
+      background: var(--primary);
+      padding: 48px 24px 64px;
+      text-align: center;
+    }
+    .orca-hero-label { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(245,240,232,0.5); margin-bottom: 12px; }
+    .orca-hero-title { font-family: var(--font-title); font-size: clamp(1.8rem, 5vw, 3rem); font-weight: 900; color: #fff; line-height: 1.15; margin-bottom: 12px; }
+    .orca-hero-sub { color: rgba(255,255,255,0.72); font-size: 1rem; max-width: 480px; margin: 0 auto; }
+
+    /* ── Layout principal ── */
+    .orca-main {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 40px 24px 80px;
+      display: grid;
+      grid-template-columns: 1fr 320px;
+      gap: 32px;
+      align-items: start;
+    }
+
+    /* ── Steps ── */
+    #step-build, #step-contact, #step-success { display: none; }
+    #step-build.active, #step-contact.active, #step-success.active { display: block; }
+
+    /* ── Abas de categoria ── */
+    .cat-tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 24px; }
+    .cat-btn {
+      padding: 8px 18px; border-radius: 100px; font-size: 0.82rem; font-weight: 500;
+      border: 1.5px solid rgba(45,27,105,0.2); color: var(--text-muted);
+      background: transparent; cursor: pointer; transition: all 0.2s;
+    }
+    .cat-btn:hover { border-color: var(--primary); color: var(--primary); }
+    .cat-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); font-weight: 600; }
+
+    /* ── Cards de serviço ── */
+    .service-list { display: flex; flex-direction: column; gap: 12px; }
+    .service-card {
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: 20px;
+      box-shadow: var(--shadow);
+      border: 2px solid transparent;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .service-card.selected { border-color: var(--primary); }
+    .service-info { flex: 1; }
+    .service-name { font-weight: 600; font-size: 0.95rem; color: var(--text); margin-bottom: 4px; }
+    .service-desc { font-size: 0.82rem; color: var(--text-muted); margin-bottom: 10px; }
+    .service-price { font-weight: 700; font-size: 1.05rem; color: var(--primary); }
+    .service-unit { font-size: 0.78rem; color: var(--text-muted); margin-left: 4px; }
+    .service-subtotal { font-size: 0.8rem; font-weight: 600; color: var(--primary); margin-top: 4px; }
+
+    /* ── Contador +/- ── */
+    .counter { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+    .counter-btn {
+      width: 32px; height: 32px; border-radius: 50%;
+      border: 1.5px solid var(--border); background: #fff;
+      font-size: 1.1rem; font-weight: 600; color: var(--primary);
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      transition: all 0.15s;
+    }
+    .counter-btn:hover { background: var(--primary); color: #fff; border-color: var(--primary); }
+    .counter-val {
+      width: 36px; text-align: center; font-weight: 600; font-size: 0.95rem;
+      border: 1.5px solid var(--border); border-radius: 6px; padding: 4px 0;
+      background: #fff;
+    }
+    .counter-right { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
+
+    /* ── Resumo lateral ── */
+    .summary-box {
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: 24px;
+      box-shadow: var(--shadow);
+      position: sticky;
+      top: 80px;
+    }
+    .summary-title { font-family: var(--font-title); font-size: 1.25rem; font-weight: 700; color: var(--text); margin-bottom: 16px; }
+    .summary-empty { color: var(--text-muted); font-size: 0.875rem; text-align: center; padding: 16px 0; }
+    .summary-list { list-style: none; display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+    .summary-item { display: flex; justify-content: space-between; gap: 8px; font-size: 0.82rem; }
+    .summary-item-name { color: var(--text); flex: 1; }
+    .summary-item-val { color: var(--primary); font-weight: 600; white-space: nowrap; }
+    .summary-divider { border: none; border-top: 1px solid var(--border); margin: 12px 0; }
+    .summary-total-row { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 20px; }
+    .summary-total-label { font-size: 0.82rem; color: var(--text-muted); }
+    .summary-total-val { font-size: 1.4rem; font-weight: 700; color: var(--primary); }
+    .btn-primary {
+      display: block; width: 100%;
+      background: var(--primary); color: #fff;
+      border: none; border-radius: 100px;
+      padding: 14px 24px; font-size: 0.95rem; font-weight: 600;
+      cursor: pointer; text-align: center;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .btn-primary:hover:not(:disabled) { background: #3d2799; transform: translateY(-1px); }
+    .btn-primary:disabled { opacity: 0.45; cursor: not-allowed; }
+    .btn-secondary {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: transparent; color: var(--primary);
+      border: 1.5px solid var(--primary); border-radius: 100px;
+      padding: 10px 20px; font-size: 0.875rem; font-weight: 600;
+      cursor: pointer; transition: all 0.2s;
+    }
+    .btn-secondary:hover { background: var(--primary); color: #fff; }
+
+    /* ── Step: contato ── */
+    .contact-wrap { max-width: 640px; }
+    .contact-summary-bar {
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: 16px 20px;
+      box-shadow: var(--shadow);
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 24px;
+    }
+    .contact-summary-info p { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 2px; }
+    .contact-summary-total { font-size: 1.4rem; font-weight: 700; color: var(--primary); }
+    .contact-card {
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: 28px;
+      box-shadow: var(--shadow);
+      display: flex; flex-direction: column; gap: 16px;
+    }
+    .form-group { display: flex; flex-direction: column; gap: 5px; }
+    label { font-size: 0.85rem; font-weight: 500; color: var(--text); }
+    .form-input {
+      padding: 12px 16px; border-radius: 8px;
+      border: 1.5px solid var(--border); background: #fff;
+      font-size: 0.9rem; font-family: var(--font-body); color: var(--text);
+      transition: border-color 0.2s;
+    }
+    .form-input:focus { outline: none; border-color: var(--primary); }
+    textarea.form-input { resize: vertical; min-height: 100px; }
+    .step-back { background: none; border: none; cursor: pointer; color: var(--primary); font-size: 0.875rem; font-weight: 600; margin-bottom: 20px; display: inline-flex; align-items: center; gap: 6px; padding: 0; }
+    .step-back:hover { text-decoration: underline; }
+
+    /* ── Step: sucesso ── */
+    .success-wrap {
+      max-width: 480px; margin: 0 auto; text-align: center;
+      background: var(--surface); border-radius: var(--radius);
+      padding: 48px 32px; box-shadow: var(--shadow);
+    }
+    .success-icon { font-size: 64px; margin-bottom: 16px; }
+    .success-title { font-family: var(--font-title); font-size: 1.8rem; font-weight: 700; margin-bottom: 10px; }
+    .success-sub { color: var(--text-muted); margin-bottom: 24px; }
+    .success-total { font-size: 2rem; font-weight: 700; color: var(--primary); margin-bottom: 24px; }
+
+    /* ── Seção título ── */
+    .section-head { margin-bottom: 28px; }
+    .section-label { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; color: var(--primary); margin-bottom: 6px; }
+    .section-title { font-family: var(--font-title); font-size: clamp(1.5rem, 3vw, 2rem); font-weight: 700; color: var(--text); margin-bottom: 6px; }
+    .section-sub { color: var(--text-muted); font-size: 0.9rem; }
+
+    /* ── Responsivo ── */
+    @media (max-width: 768px) {
+      .orca-main { grid-template-columns: 1fr; padding: 24px 16px 60px; gap: 0; }
+      .summary-box { position: static; margin-top: 24px; order: -1; }
+      .contact-wrap { max-width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="orca-header">
+    <a href="index.html" class="header-logo">NRB</a>
+    <a href="index.html" class="header-back">← Voltar ao portfólio</a>
+  </header>
+
+  <!-- Hero -->
+  <div class="orca-hero">
+    <p class="orca-hero-label">Orçamento Online ✦</p>
+    <h1 class="orca-hero-title">Monte seu orçamento</h1>
+    <p class="orca-hero-sub">Escolha os serviços, ajuste as quantidades e envie pelo WhatsApp</p>
+  </div>
+
+  <!-- Main -->
+  <div class="orca-main">
+
+    <!-- Coluna esquerda: steps -->
+    <div>
+
+      <!-- Step 1: Seleção de serviços -->
+      <div id="step-build" class="active">
+        <div class="section-head">
+          <p class="section-label">Passo 1 de 2</p>
+          <h2 class="section-title">Selecione os serviços</h2>
+          <p class="section-sub">Clique em + para adicionar a quantidade desejada</p>
+        </div>
+        <div class="cat-tabs" id="cat-tabs"></div>
+        <div class="service-list" id="service-list"></div>
+      </div>
+
+      <!-- Step 2: Dados de contato -->
+      <div id="step-contact">
+        <div class="contact-wrap">
+          <button class="step-back" onclick="goStep('build')">← Voltar e editar</button>
+          <div class="section-head">
+            <p class="section-label">Passo 2 de 2</p>
+            <h2 class="section-title">Seus dados</h2>
+            <p class="section-sub">Preencha para enviar o orçamento pelo WhatsApp</p>
+          </div>
+          <div class="contact-summary-bar">
+            <div class="contact-summary-info">
+              <p id="contact-qty-label">0 serviço(s) selecionado(s)</p>
+              <div class="contact-summary-total" id="contact-total-display">R$ 0,00</div>
+            </div>
+            <button class="btn-secondary" onclick="goStep('build')">Editar →</button>
+          </div>
+          <form class="contact-card" id="contact-form" onsubmit="handleSubmit(event)">
+            <div class="form-group">
+              <label for="f-name">Nome completo *</label>
+              <input type="text" id="f-name" class="form-input" placeholder="Seu nome" required />
+            </div>
+            <div class="form-group">
+              <label for="f-email">E-mail *</label>
+              <input type="email" id="f-email" class="form-input" placeholder="seu@email.com" required />
+            </div>
+            <div class="form-group">
+              <label for="f-phone">WhatsApp</label>
+              <input type="tel" id="f-phone" class="form-input" placeholder="(00) 00000-0000" />
+            </div>
+            <div class="form-group">
+              <label for="f-briefing">Briefing do projeto</label>
+              <textarea id="f-briefing" class="form-input" rows="4" placeholder="Conte sobre seu projeto, marca, objetivos..."></textarea>
+            </div>
+            <button type="submit" class="btn-primary">Enviar pelo WhatsApp →</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Step 3: Sucesso -->
+      <div id="step-success">
+        <div class="success-wrap">
+          <div class="success-icon">✅</div>
+          <h2 class="success-title">Orçamento enviado!</h2>
+          <p class="success-sub">Sua mensagem foi enviada pelo WhatsApp.<br>Natallia entrará em contato em breve.</p>
+          <div class="success-total" id="success-total">R$ 0,00</div>
+          <button class="btn-primary" onclick="resetAll()">Fazer novo orçamento</button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Coluna direita: resumo -->
+    <div class="summary-box" id="summary-box">
+      <p class="summary-title">Resumo</p>
+      <p class="summary-empty" id="summary-empty">Nenhum serviço selecionado ainda.</p>
+      <ul class="summary-list" id="summary-list" style="display:none"></ul>
+      <hr class="summary-divider" id="summary-divider" style="display:none" />
+      <div class="summary-total-row" id="summary-total-row" style="display:none">
+        <span class="summary-total-label">Total estimado</span>
+        <span class="summary-total-val" id="summary-total">R$ 0,00</span>
+      </div>
+      <button class="btn-primary" id="btn-continue" onclick="goStep('contact')" disabled>Continuar →</button>
+    </div>
+
+  </div>
+
+<script>
+  const WA_NUMBER = '55'; // Preencher com DDD + número, ex: '5538999999999'
+
+  const PRICES = {
+    social_media: { label: 'Social Media', icon: '📱', items: [
+      { id: 'post_feed',    name: 'Post Feed',    desc: 'Arte para feed do Instagram/Facebook',         unit: 'por post',      price: 50  },
+      { id: 'story',        name: 'Story',        desc: 'Arte para stories (até 3 variações)',           unit: 'por story',     price: 30  },
+      { id: 'reels_cover',  name: 'Capa de Reels',desc: 'Thumbnail personalizada para reels',           unit: 'por capa',      price: 35  },
+      { id: 'carrossel',    name: 'Carrossel',    desc: 'Sequência de 5 a 10 slides',                   unit: 'por carrossel', price: 120 },
+    ]},
+    identidade_visual: { label: 'Identidade Visual', icon: '🎨', items: [
+      { id: 'logo',         name: 'Logotipo',         desc: 'Criação de logo + variações (horizontal, ícone)', unit: 'por projeto', price: 800  },
+      { id: 'manual_marca', name: 'Manual de Marca',  desc: 'Guia completo de identidade visual',              unit: 'por projeto', price: 1200 },
+      { id: 'papelaria',    name: 'Papelaria Básica', desc: 'Cartão, envelope, papel timbrado',                unit: 'por kit',     price: 400  },
+    ]},
+    videos: { label: 'Vídeos', icon: '🎬', items: [
+      { id: 'edicao_reels',  name: 'Edição de Reels',  desc: 'Edição de vídeo curto até 60s com legenda e trilha', unit: 'por vídeo', price: 80  },
+      { id: 'video_youtube', name: 'Vídeo YouTube',    desc: 'Edição completa com intro, motion e thumbnail',      unit: 'por vídeo', price: 250 },
+      { id: 'motion_post',   name: 'Motion Post',      desc: 'Arte animada para feed ou stories',                  unit: 'por peça',  price: 90  },
+    ]},
+    pacotes: { label: 'Pacotes', icon: '📦', items: [
+      { id: 'pacote_starter', name: 'Pacote Starter', desc: '8 posts + 8 stories por mês',                          unit: 'por mês', price: 500  },
+      { id: 'pacote_pro',     name: 'Pacote Pro',     desc: '15 posts + 15 stories + 4 reels por mês',              unit: 'por mês', price: 900  },
+      { id: 'pacote_full',    name: 'Pacote Full',    desc: 'Gestão completa: posts, stories, reels e vídeos',      unit: 'por mês', price: 1500 },
+    ]},
+  };
+
+  let quantities = {};
+  let activeCategory = Object.keys(PRICES)[0];
+
+  function fmt(val) {
+    return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(val);
+  }
+
+  function getSelectedItems() {
+    const items = [];
+    for (const catKey of Object.keys(PRICES)) {
+      for (const item of PRICES[catKey].items) {
+        const qty = quantities[item.id] || 0;
+        if (qty > 0) items.push({ ...item, qty, subtotal: item.price * qty });
+      }
+    }
+    return items;
+  }
+
+  function getTotal() {
+    return getSelectedItems().reduce((s, i) => s + i.subtotal, 0);
+  }
+
+  function renderTabs() {
+    const tabs = document.getElementById('cat-tabs');
+    tabs.innerHTML = '';
+    Object.entries(PRICES).forEach(([key, cat]) => {
+      const btn = document.createElement('button');
+      btn.className = 'cat-btn' + (key === activeCategory ? ' active' : '');
+      btn.textContent = cat.icon + ' ' + cat.label;
+      btn.onclick = () => { activeCategory = key; renderTabs(); renderServices(); };
+      tabs.appendChild(btn);
+    });
+  }
+
+  function makeEl(tag, cls, text) {
+    const el = document.createElement(tag);
+    if (cls) el.className = cls;
+    if (text != null) el.textContent = text;
+    return el;
+  }
+
+  function renderServices() {
+    const list = document.getElementById('service-list');
+    list.innerHTML = '';
+    PRICES[activeCategory].items.forEach(item => {
+      const qty = quantities[item.id] || 0;
+      const subtotal = item.price * qty;
+
+      const card = document.createElement('div');
+      card.className = 'service-card' + (qty > 0 ? ' selected' : '');
+      card.id = 'card-' + item.id;
+
+      // Info column
+      const info = makeEl('div', 'service-info');
+      info.appendChild(makeEl('div', 'service-name', item.name));
+      info.appendChild(makeEl('div', 'service-desc', item.desc));
+
+      const priceRow = document.createElement('div');
+      priceRow.appendChild(makeEl('span', 'service-price', fmt(item.price)));
+      priceRow.appendChild(makeEl('span', 'service-unit', ' / ' + item.unit));
+      info.appendChild(priceRow);
+
+      if (qty > 0) {
+        info.appendChild(makeEl('div', 'service-subtotal', 'Subtotal: ' + fmt(subtotal)));
+      }
+
+      // Counter column
+      const counterRight = makeEl('div', 'counter-right');
+      const counter = makeEl('div', 'counter');
+
+      const btnMinus = makeEl('button', 'counter-btn', '−');
+      btnMinus.type = 'button';
+      btnMinus.addEventListener('click', () => changeQty(item.id, -1));
+
+      const input = document.createElement('input');
+      input.className = 'counter-val';
+      input.type = 'number';
+      input.min = '0';
+      input.max = '99';
+      input.value = qty;
+      input.addEventListener('input', () => setQty(item.id, +input.value));
+
+      const btnPlus = makeEl('button', 'counter-btn', '+');
+      btnPlus.type = 'button';
+      btnPlus.addEventListener('click', () => changeQty(item.id, 1));
+
+      counter.appendChild(btnMinus);
+      counter.appendChild(input);
+      counter.appendChild(btnPlus);
+      counterRight.appendChild(counter);
+
+      card.appendChild(info);
+      card.appendChild(counterRight);
+      list.appendChild(card);
+    });
+  }
+
+  function changeQty(id, delta) {
+    quantities[id] = Math.max(0, (quantities[id] || 0) + delta);
+    renderServices();
+    renderSummary();
+  }
+
+  function setQty(id, val) {
+    quantities[id] = isNaN(val) || val < 0 ? 0 : Math.floor(val);
+    renderSummary();
+    // Atualiza apenas a borda do card e subtotal sem re-renderizar a lista inteira
+    const card = document.getElementById('card-' + id);
+    if (card) {
+      card.classList.toggle('selected', quantities[id] > 0);
+      const subtotalEl = card.querySelector('.service-subtotal');
+      const qty = quantities[id];
+      const item = Object.values(PRICES).flatMap(c => c.items).find(i => i.id === id);
+      if (item) {
+        if (qty > 0) {
+          if (subtotalEl) subtotalEl.textContent = 'Subtotal: ' + fmt(item.price * qty);
+          else {
+            const newEl = makeEl('div', 'service-subtotal', 'Subtotal: ' + fmt(item.price * qty));
+            card.querySelector('.service-info').appendChild(newEl);
+          }
+        } else {
+          if (subtotalEl) subtotalEl.remove();
+        }
+      }
+    }
+  }
+
+  function renderSummary() {
+    const items = getSelectedItems();
+    const total = getTotal();
+    const empty = document.getElementById('summary-empty');
+    const list = document.getElementById('summary-list');
+    const divider = document.getElementById('summary-divider');
+    const totalRow = document.getElementById('summary-total-row');
+    const totalEl = document.getElementById('summary-total');
+    const continueBtn = document.getElementById('btn-continue');
+
+    if (items.length === 0) {
+      empty.style.display = '';
+      list.style.display = 'none';
+      divider.style.display = 'none';
+      totalRow.style.display = 'none';
+      continueBtn.disabled = true;
+      return;
+    }
+
+    empty.style.display = 'none';
+    list.style.display = '';
+    divider.style.display = '';
+    totalRow.style.display = '';
+    continueBtn.disabled = false;
+    totalEl.textContent = fmt(total);
+
+    list.innerHTML = '';
+    items.forEach(i => {
+      const li = makeEl('li', 'summary-item');
+      li.appendChild(makeEl('span', 'summary-item-name', i.name + ' × ' + i.qty));
+      li.appendChild(makeEl('span', 'summary-item-val', fmt(i.subtotal)));
+      list.appendChild(li);
+    });
+  }
+
+  function goStep(step) {
+    document.querySelectorAll('#step-build, #step-contact, #step-success').forEach(el => el.classList.remove('active'));
+    document.getElementById('step-' + step).classList.add('active');
+
+    if (step === 'contact') {
+      const items = getSelectedItems();
+      const total = getTotal();
+      document.getElementById('contact-qty-label').textContent = items.length + ' serviço(s) selecionado(s)';
+      document.getElementById('contact-total-display').textContent = fmt(total);
+    }
+
+    const summaryBox = document.getElementById('summary-box');
+    summaryBox.style.display = (step === 'success') ? 'none' : '';
+  }
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    const name     = document.getElementById('f-name').value.trim();
+    const email    = document.getElementById('f-email').value.trim();
+    const phone    = document.getElementById('f-phone').value.trim();
+    const briefing = document.getElementById('f-briefing').value.trim();
+    const items    = getSelectedItems();
+    const total    = getTotal();
+
+    let msg = `Olá Natallia! Gostaria de solicitar um orçamento:\n\n`;
+    msg += `*Serviços selecionados:*\n`;
+    items.forEach(i => { msg += `• ${i.name} × ${i.qty}: ${fmt(i.subtotal)}\n`; });
+    msg += `\n*Total estimado: ${fmt(total)}*\n\n`;
+    msg += `*Nome:* ${name}\n`;
+    msg += `*E-mail:* ${email}\n`;
+    if (phone) msg += `*WhatsApp:* ${phone}\n`;
+    if (briefing) msg += `*Briefing:* ${briefing}\n`;
+
+    document.getElementById('success-total').textContent = fmt(total);
+    goStep('success');
+
+    const url = `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`;
+    window.open(url, '_blank');
+  }
+
+  function resetAll() {
+    quantities = {};
+    document.getElementById('f-name').value = '';
+    document.getElementById('f-email').value = '';
+    document.getElementById('f-phone').value = '';
+    document.getElementById('f-briefing').value = '';
+    renderTabs();
+    renderServices();
+    renderSummary();
+    goStep('build');
+    document.getElementById('summary-box').style.display = '';
+  }
+
+  // Init
+  renderTabs();
+  renderServices();
+  renderSummary();
+</script>
+</body>
+</html>

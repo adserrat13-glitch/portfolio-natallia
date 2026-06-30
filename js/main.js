@@ -89,22 +89,20 @@ const projects = {
   },
   copasaolucas: {
     title: 'Copa São Lucas',
-    cliente: 'Torneio Esportivo · Montes Claros',
-    categoria: 'Eventos',
+    cliente: 'Plano de Saúde São Lucas · Montes Claros',
+    categoria: 'Social Media',
     behance: 'https://www.behance.net/natalliarocha',
-    descricao: 'Cobertura audiovisual e conteúdo para redes sociais de torneio de futebol local, com vídeos dinâmicos de escalação e melhores momentos.',
+    descricao: 'Criação de peças gráficas e conteúdo audiovisual para o torneio esportivo promovido pelo Plano de Saúde São Lucas, reforçando o vínculo da marca com a comunidade local.',
     objetivos: [
-      'Criar vídeos de impacto para divulgação do torneio',
-      'Produzir conteúdo para cobertura ao vivo nas redes sociais',
-      'Desenvolver vinhetas e motion para os highlights',
+      'Fortalecer a presença digital do Plano de Saúde São Lucas',
+      'Criar peças de escalação e cobertura do torneio para as redes sociais',
+      'Desenvolver identidade visual esportiva alinhada à marca',
     ],
-    solucao: 'Desenvolvemos um sistema audiovisual com linguagem esportiva — cortes rápidos, motion bold, paleta vibrante e trilha de alta energia. Os vídeos de escalação, abertura e melhores momentos garantiram cobertura profissional e engajamento nas redes.',
-    paleta: ['#1A1A2E', '#2D1B69', '#E8D44D', '#FFFFFF', '#C0392B'],
-    tipografia: 'Motion com tipografia bold e condensada para impacto visual nos títulos, com sans-serif clara nas informações do torneio.',
-    resultado: 'Cobertura audiovisual completa que elevou a presença digital do torneio e gerou engajamento expressivo nas redes sociais.',
+    solucao: 'Desenvolvemos um sistema de peças gráficas com linguagem esportiva — tipografia bold, paleta vibrante e motion design que manteve a identidade institucional do Plano de Saúde São Lucas em todos os formatos de divulgação do torneio.',
+    paleta: ['#1B4332', '#40916C', '#B7E4C7', '#E8D44D', '#FFFFFF'],
+    tipografia: 'Tipografia bold e display nos títulos das peças, combinada com sans-serif limpa nas informações — equilíbrio entre impacto esportivo e clareza institucional.',
+    resultado: 'Conteúdo visual completo que integrou a comunicação do torneio à marca do Plano de Saúde São Lucas, gerando engajamento e reconhecimento da marca junto à comunidade.',
     images: [
-      'assets/pecasgrafias/POST 1@2x.png',
-      'assets/pecasgrafias/POST 2@2x.png',
       'assets/pecasgrafias/POST 3@2x.png',
       'assets/pecasgrafias/POST 4@2x.png',
       'assets/pecasgrafias/POST 5@2x.png',
@@ -125,6 +123,9 @@ const reels = [
   { type: 'mp4', src: 'assets/reels/reel5.mp4', tag: 'Social Media', title: 'Reel · Social Media', poster: '' },
   { type: 'mp4', src: 'assets/reels/reel6.mp4', tag: 'Eventos', title: 'Reel · Eventos', poster: '' },
   { type: 'mp4', src: 'assets/reels/reel8.mp4', tag: 'Motion', title: 'Reel · Motion Design', poster: '' },
+  { type: 'mp4', src: 'assets/reels/IMG_1365.MOV', tag: 'Bastidores', title: 'Reel · Bastidores', poster: '' },
+  { type: 'mp4', src: 'assets/reels/IMG_4324.MOV', tag: 'Social Media', title: 'Reel · Social Media', poster: '' },
+  { type: 'mp4', src: 'assets/reels/IMG_5440 (1).MOV', tag: 'Motion', title: 'Reel · Motion Design', poster: '' },
 ];
 
 /* ── Navbar scroll ──────────────────────────── */

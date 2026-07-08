@@ -17,5 +17,7 @@ const REELS_DATA = [
   { file: "IMG_5440 (1).MOV", title: "IMG 5440", poster: null },
   { file: "WhatsApp Video 2026-07-08 at 11.38.10.mp4", title: "Reel 9", poster: null },
   { file: "WhatsApp Video 2026-07-08 at 14.05.42.mp4", title: "Reel 10", poster: null },
-  { file: "WhatsApp Video 2026-07-08 at 16.07.54.mp4", title: "Reel 11", poster: null }
+  { file: "WhatsApp Video 2026-07-08 at 16.07.54.mp4", title: "Reel 11", poster: null },
+  { file: "WhatsApp Video 2026-07-08 at 18.50.59.mp4", title: "Reel 12", poster: null },
+  { file: "WhatsApp Video 2026-07-08 at 18.51.13.mp4", title: "Reel 13", poster: null }
 ];

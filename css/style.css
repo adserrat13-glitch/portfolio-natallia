@@ -3,17 +3,6 @@
    ══════════════════════════════════════════════ */
 
 :root {
-  --bg: #0a0a0a;
-  --bg-elevated: #141414;
-  --text: #f5f3ef;
-  --text-muted: #a8a49c;
-  --accent: #ffffff;
-  --border: rgba(245, 243, 239, 0.08);
-  --shadow: 0 20px 60px rgba(0, 0, 0, 0.55);
-  --ease: cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-html[data-theme="light"] {
   --bg: #faf9f6;
   --bg-elevated: #ffffff;
   --text: #17130f;
@@ -21,6 +10,7 @@ html[data-theme="light"] {
   --accent: #17130f;
   --border: rgba(23, 19, 15, 0.08);
   --shadow: 0 20px 60px rgba(23, 19, 15, 0.12);
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -57,10 +47,10 @@ img { max-width: 100%; display: block; }
 
 .navbar.scrolled {
   padding: 16px 6vw;
-  background: rgba(10, 10, 10, 0.75);
+  background: rgba(250, 249, 246, 0.85);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 8px 30px rgba(23, 19, 15, 0.08);
   border-bottom: 1px solid var(--border);
 }
 
@@ -109,26 +99,6 @@ img { max-width: 100%; display: block; }
 
 .nav-links a:hover::after {
   width: 100%;
-}
-
-.theme-toggle {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  border: 1px solid var(--border);
-  background: transparent;
-  color: var(--text);
-  font-size: 1rem;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background 0.3s var(--ease), transform 0.3s var(--ease), border-color 0.3s var(--ease);
-}
-
-.theme-toggle:hover {
-  background: var(--border);
-  transform: rotate(15deg);
 }
 
 /* ══ HERO ════════════════════════════════════ */

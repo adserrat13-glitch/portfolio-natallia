@@ -5,7 +5,6 @@
    ══════════════════════════════════════════════ */
 
 document.addEventListener('DOMContentLoaded', () => {
-  initThemeToggle();
   initNavbarScroll();
   initSmoothAnchors();
   loadGallery();
@@ -32,33 +31,6 @@ function loadMarquee() {
 
     figure.appendChild(img);
     track.appendChild(figure);
-  });
-}
-
-/* ── Alterna entre modo escuro (padrão) e claro, com persistência ── */
-function initThemeToggle() {
-  const toggle = document.getElementById('theme-toggle');
-  const icon = toggle.querySelector('.theme-toggle-icon');
-  const root = document.documentElement;
-
-  const applyTheme = (theme) => {
-    if (theme === 'light') {
-      root.setAttribute('data-theme', 'light');
-      icon.textContent = '☾';
-    } else {
-      root.removeAttribute('data-theme');
-      icon.textContent = '☀';
-    }
-  };
-
-  const saved = localStorage.getItem('theme');
-  applyTheme(saved === 'light' ? 'light' : 'dark');
-
-  toggle.addEventListener('click', () => {
-    const isLight = root.getAttribute('data-theme') === 'light';
-    const next = isLight ? 'dark' : 'light';
-    applyTheme(next);
-    localStorage.setItem('theme', next);
   });
 }
 

@@ -28,6 +28,9 @@ function loadMarquee() {
     img.src = encodeURI(`assets/estaticos/${item.file}`);
     img.alt = item.alt || item.file;
     img.loading = 'lazy';
+    img.addEventListener('error', () => {
+      figure.remove();
+    });
 
     figure.appendChild(img);
     track.appendChild(figure);

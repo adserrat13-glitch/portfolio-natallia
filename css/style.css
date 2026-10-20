@@ -66,6 +66,14 @@ img { max-width: 100%; display: block; }
   font-family: 'Cormorant Garamond', serif;
   font-size: 1.5rem;
   letter-spacing: 0.04em;
+  display: inline-flex;
+  align-items: center;
+}
+
+.nav-logo img {
+  display: block;
+  height: 38px;
+  width: auto;
 }
 
 .nav-links {
@@ -155,6 +163,12 @@ img { max-width: 100%; display: block; }
   font-size: clamp(2.6rem, 6.5vw, 5.2rem);
   line-height: 1.05;
   letter-spacing: 0.01em;
+}
+
+.hero-title--logo img {
+  display: block;
+  width: clamp(220px, 32vw, 400px);
+  height: auto;
 }
 
 .hero-title em {
@@ -603,4 +617,12 @@ img { max-width: 100%; display: block; }
   font-size: 0.8rem;
   letter-spacing: 0.06em;
   border-top: 1px solid var(--border);
+}
+
+@media (max-width: 780px) {
+  .hero-title--logo img { margin: 0 auto; }
+}
+
+@media (max-width: 640px) {
+  .nav-logo img { height: 30px; }
 }

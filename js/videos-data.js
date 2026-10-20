@@ -1,23 +1,21 @@
 /* ══════════════════════════════════════════════
    Manifesto dos vídeos da galeria (assets/reels).
-   Carregado como script comum (não fetch) para
-   funcionar mesmo abrindo o index.html via file://,
-   onde fetch() de JSON local é bloqueado por CORS.
+   GERADO AUTOMATICAMENTE por otimizar-videos.ps1 — não edite à mão.
    ══════════════════════════════════════════════ */
 
 const REELS_DATA = [
-  { file: "reel2.mp4", title: "Reel 2", poster: null },
-  { file: "reel3.mp4", title: "Reel 3", poster: null },
-  { file: "reel4.mp4", title: "Reel 4", poster: "reel4.jpg" },
-  { file: "reel5.mp4", title: "Reel 5", poster: null },
-  { file: "reel6.mp4", title: "Reel 6", poster: null },
-  { file: "reel8.mp4", title: "Reel 8", poster: null },
-  { file: "IMG_1365.MOV", title: "IMG 1365", poster: null },
-  { file: "IMG_4324.MOV", title: "IMG 4324", poster: null },
-  { file: "IMG_5440 (1).MOV", title: "IMG 5440", poster: null },
-  { file: "WhatsApp Video 2026-07-08 at 11.38.10.mp4", title: "Reel 9", poster: null },
-  { file: "WhatsApp Video 2026-07-08 at 14.05.42.mp4", title: "Reel 10", poster: null },
-  { file: "WhatsApp Video 2026-07-08 at 16.07.54.mp4", title: "Reel 11", poster: null },
-  { file: "WhatsApp Video 2026-07-08 at 18.50.59.mp4", title: "Reel 12", poster: null },
-  { file: "WhatsApp Video 2026-07-08 at 18.51.13.mp4", title: "Reel 13", poster: null }
+  { file: "reel-01.mp4", title: "Reel 1", poster: "reel-01.jpg" },
+  { file: "reel-02.mp4", title: "Reel 2", poster: "reel-02.jpg" },
+  { file: "reel-03.mp4", title: "Reel 3", poster: "reel-03.jpg" },
+  { file: "reel-04.mp4", title: "Reel 4", poster: "reel-04.jpg" },
+  { file: "reel-05.mp4", title: "Reel 5", poster: "reel-05.jpg" },
+  { file: "reel-06.mp4", title: "Reel 6", poster: "reel-06.jpg" },
+  { file: "reel-07.mp4", title: "Reel 7", poster: "reel-07.jpg" },
+  { file: "reel-08.mp4", title: "Reel 8", poster: "reel-08.jpg" },
+  { file: "reel-09.mp4", title: "Reel 9", poster: "reel-09.jpg" },
+  { file: "reel-10.mp4", title: "Reel 10", poster: "reel-10.jpg" },
+  { file: "reel-11.mp4", title: "Reel 11", poster: "reel-11.jpg" },
+  { file: "reel-12.mp4", title: "Reel 12", poster: "reel-12.jpg" },
+  { file: "reel-13.mp4", title: "Reel 13", poster: "reel-13.jpg" },
+  { file: "reel-14.mp4", title: "Reel 14", poster: "reel-14.jpg" }
 ];

@@ -113,9 +113,10 @@ function buildCard(item) {
     video.muted = true;
     video.loop = true;
     video.playsInline = true;
-    video.preload = 'metadata';
+    // Só a capa carrega de início; o vídeo é baixado quando chega perto da tela
+    video.preload = 'none';
     if (poster) video.poster = poster;
-    video.src = src;
+    video.dataset.src = src;
 
     video.addEventListener('error', () => {
       card.replaceChild(buildFallback(item), video);
@@ -144,6 +145,7 @@ function buildCard(item) {
     e.stopPropagation();
     const video = card.querySelector('video');
     if (!video) return;
+    loadVideoSrc(video);
     if (video.paused) {
       video.play();
       playBtn.textContent = '❚❚';
@@ -206,6 +208,7 @@ function observeAutoplay() {
       const video = entry.target;
       const playBtn = video.closest('.reel-card').querySelector('.reel-play-btn');
       if (entry.isIntersecting) {
+        loadVideoSrc(video);
         video.play().then(() => {
           if (playBtn) playBtn.textContent = '❚❚';
         }).catch(() => {});
@@ -217,4 +220,20 @@ function observeAutoplay() {
   }, { threshold: 0.5 });
 
   videos.forEach((video) => observer.observe(video));
+
+  // Começa a baixar um pouco antes do vídeo aparecer
+  const preloader = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
+      loadVideoSrc(entry.target);
+      preloader.unobserve(entry.target);
+    });
+  }, { rootMargin: '300px 0px' });
+
+  videos.forEach((video) => preloader.observe(video));
+}
+
+function loadVideoSrc(video) {
+  if (video.getAttribute('src') || !video.dataset.src) return;
+  video.src = video.dataset.src;
 }

@@ -1,9 +1,12 @@
 ﻿# ══════════════════════════════════════════════
 #  Otimiza vídeos novos para o portfólio.
 #  1. Coloque os vídeos (mp4, mov, etc.) em  videos-novos/
+#     Use o nome do cliente + número (ex.: BRUNA1.mp4, BRUNA2.mp4, BRUNA3.mp4).
 #  2. Rode este script (ou dê duplo clique em ADICIONAR-VIDEOS.bat)
-#  Cada vídeo vira assets/reels/reel-NN.mp4 (leve, 720p) + reel-NN.jpg (capa),
-#  o original é guardado em videos-originais/ (fora do Git) e
+#  Cada vídeo vira assets/reels/bruna-1.mp4 (leve, 720p) + bruna-1.jpg (capa),
+#  aparece na galeria como "BRUNA 1" e a galeria fica em ordem de nome
+#  (os vídeos do mesmo cliente ficam juntos).
+#  O original é guardado em videos-originais/ (fora do Git) e
 #  js/videos-data.js é regenerado automaticamente.
 # ══════════════════════════════════════════════
 param([switch]$Publicar)
@@ -23,18 +26,21 @@ if (-not $ffmpeg) {
 }
 if (-not $ffmpeg) { throw 'ffmpeg não encontrado. Instale com: winget install Gyan.FFmpeg' }
 
-function Next-Number {
-  $nums = Get-ChildItem $reels -Filter 'reel-*.mp4' | ForEach-Object {
-    if ($_.BaseName -match '^reel-(\d+)$') { [int]$Matches[1] }
-  }
-  if ($nums) { [int](($nums | Measure-Object -Maximum).Maximum) + 1 } else { 1 }
+# "BRUNA 1.MOV" / "Bruna1.mp4" -> "bruna-1" (sem acentos/espaços); não sobrescreve um nome existente
+function Nome-Arquivo([string]$base) {
+  $n = $base.Normalize([Text.NormalizationForm]::FormD) -replace '\p{Mn}', ''
+  $n = ($n -replace '([A-Za-z])(\d)', '$1-$2').ToLower() -replace '[^a-z0-9]+', '-'
+  $n = $n.Trim('-'); if (-not $n) { $n = 'video' }
+  $final = $n; $i = 2
+  while (Test-Path (Join-Path $reels "$final.mp4")) { $final = "$n-$i"; $i++ }
+  return $final
 }
 
 $exts = '.mp4', '.mov', '.m4v', '.webm', '.avi', '.mkv'
 $inputs = Get-ChildItem $novos -File | Where-Object { $exts -contains $_.Extension.ToLower() } | Sort-Object Name
 
 foreach ($f in $inputs) {
-  $name = 'reel-{0:D2}' -f (Next-Number)
+  $name = Nome-Arquivo $f.BaseName
   $mp4  = Join-Path $reels "$name.mp4"
   $jpg  = Join-Path $reels "$name.jpg"
   Write-Host "→ $($f.Name)  =>  $name.mp4"
@@ -53,16 +59,20 @@ foreach ($f in $inputs) {
   Write-Host ("   {0:N1} MB -> {1:N1} MB" -f ($f.Length / 1MB), ((Get-Item $mp4).Length / 1MB))
 }
 
-# Regenera js/videos-data.js a partir dos arquivos em assets/reels
-$lines = Get-ChildItem $reels -Filter 'reel-*.mp4' | Sort-Object Name | ForEach-Object {
-  $n = [int]($_.BaseName -replace '^reel-', '')
+# Regenera js/videos-data.js a partir dos arquivos em assets/reels, em ordem de nome
+# (ordem natural: na-2 antes de na-10), deixando os vídeos de cada cliente juntos
+$ordenados = Get-ChildItem $reels -Filter '*.mp4' |
+  Sort-Object { [regex]::Replace($_.BaseName, '\d+', { param($m) $m.Value.PadLeft(6, '0') }) }
+$lines = $ordenados | ForEach-Object {
+  $titulo = (($_.BaseName -replace '-(\d+)$', ' $1') -replace '-', ' ').ToUpper()
   $poster = if (Test-Path (Join-Path $reels "$($_.BaseName).jpg")) { "`"$($_.BaseName).jpg`"" } else { 'null' }
-  "  { file: `"$($_.Name)`", title: `"Reel $n`", poster: $poster }"
+  "  { file: `"$($_.Name)`", title: `"$titulo`", poster: $poster }"
 }
 $js = @"
 /* ══════════════════════════════════════════════
    Manifesto dos vídeos da galeria (assets/reels).
    GERADO AUTOMATICAMENTE por otimizar-videos.ps1 — não edite à mão.
+   Ordem por nome: os vídeos de cada cliente ficam juntos.
    ══════════════════════════════════════════════ */
 
 const REELS_DATA = [
@@ -70,11 +80,11 @@ $($lines -join ",`n")
 ];
 "@
 [IO.File]::WriteAllText((Join-Path $root 'js\videos-data.js'), $js + "`n", (New-Object Text.UTF8Encoding $false))
-Write-Host "videos-data.js atualizado ($($lines.Count) vídeos)."
+Write-Host "videos-data.js atualizado ($(@($lines).Count) vídeos)."
 
-if ($Publicar -and $inputs) {
-  git -C $root add assets/reels js/videos-data.js
-  git -C $root commit -m "Adicionar $($inputs.Count) vídeo(s)"
+if ($Publicar) {
+  git -C $root add -A assets/reels js/videos-data.js
+  git -C $root commit -m "Atualizar vídeos da galeria"
   git -C $root push
   Write-Host 'Enviado! O Vercel publica em ~1 minuto.'
 }

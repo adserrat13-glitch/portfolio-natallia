@@ -17,5 +17,14 @@ const REELS_DATA = [
   { file: "reel-11.mp4", title: "Reel 11", poster: "reel-11.jpg" },
   { file: "reel-12.mp4", title: "Reel 12", poster: "reel-12.jpg" },
   { file: "reel-13.mp4", title: "Reel 13", poster: "reel-13.jpg" },
-  { file: "reel-14.mp4", title: "Reel 14", poster: "reel-14.jpg" }
+  { file: "reel-14.mp4", title: "Reel 14", poster: "reel-14.jpg" },
+  { file: "reel-15.mp4", title: "Reel 15", poster: "reel-15.jpg" },
+  { file: "reel-16.mp4", title: "Reel 16", poster: "reel-16.jpg" },
+  { file: "reel-17.mp4", title: "Reel 17", poster: "reel-17.jpg" },
+  { file: "reel-18.mp4", title: "Reel 18", poster: "reel-18.jpg" },
+  { file: "reel-19.mp4", title: "Reel 19", poster: "reel-19.jpg" },
+  { file: "reel-20.mp4", title: "Reel 20", poster: "reel-20.jpg" },
+  { file: "reel-21.mp4", title: "Reel 21", poster: "reel-21.jpg" },
+  { file: "reel-22.mp4", title: "Reel 22", poster: "reel-22.jpg" },
+  { file: "reel-23.mp4", title: "Reel 23", poster: "reel-23.jpg" }
 ];
